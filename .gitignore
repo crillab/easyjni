@@ -1,0 +1,9 @@
+# CLion configuration files.
+.idea
+
+# Build files.
+build
+cmake-build-debug
+
+# Miscellaneous
+.DS_Store

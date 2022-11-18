@@ -25,9 +25,9 @@ using namespace std;
 
 template<>
 JavaField<jboolean> JavaField<jboolean>::newInstance(
-        JNIEnv *environment, std::string name, jfieldID nativeField) {
+        std::string name, jfieldID nativeField) {
     return {
-            environment,
+
             std::move(name),
             nativeField,
             [](JNIEnv *env, jobject obj, jfieldID fld) {
@@ -47,9 +47,9 @@ JavaField<jboolean> JavaField<jboolean>::newInstance(
 
 template<>
 JavaField<jbyte> JavaField<jbyte>::newInstance(
-        JNIEnv *environment, std::string name, jfieldID nativeField) {
+        std::string name, jfieldID nativeField) {
     return {
-            environment,
+            
             std::move(name),
             nativeField,
             [](JNIEnv *env, jobject obj, jfieldID fld) {
@@ -69,9 +69,9 @@ JavaField<jbyte> JavaField<jbyte>::newInstance(
 
 template<>
 JavaField<jchar> JavaField<jchar>::newInstance(
-        JNIEnv *environment, std::string name, jfieldID nativeField) {
+        std::string name, jfieldID nativeField) {
     return {
-            environment,
+            
             std::move(name),
             nativeField,
             [](JNIEnv *env, jobject obj, jfieldID fld) {
@@ -91,9 +91,9 @@ JavaField<jchar> JavaField<jchar>::newInstance(
 
 template<>
 JavaField<jshort> JavaField<jshort>::newInstance(
-        JNIEnv *environment, std::string name, jfieldID nativeField) {
+        std::string name, jfieldID nativeField) {
     return {
-            environment,
+            
             std::move(name),
             nativeField,
             [](JNIEnv *env, jobject obj, jfieldID fld) {
@@ -113,9 +113,9 @@ JavaField<jshort> JavaField<jshort>::newInstance(
 
 template<>
 JavaField<jint> JavaField<jint>::newInstance(
-        JNIEnv *environment, std::string name, jfieldID nativeField) {
+        std::string name, jfieldID nativeField) {
     return {
-            environment,
+            
             std::move(name),
             nativeField,
             [](JNIEnv *env, jobject obj, jfieldID fld) {
@@ -135,9 +135,9 @@ JavaField<jint> JavaField<jint>::newInstance(
 
 template<>
 JavaField<jlong> JavaField<jlong>::newInstance(
-        JNIEnv *environment, std::string name, jfieldID nativeField) {
+        std::string name, jfieldID nativeField) {
     return {
-            environment,
+            
             std::move(name),
             nativeField,
             [](JNIEnv *env, jobject obj, jfieldID fld) {
@@ -157,9 +157,9 @@ JavaField<jlong> JavaField<jlong>::newInstance(
 
 template<>
 JavaField<jfloat> JavaField<jfloat>::newInstance(
-        JNIEnv *environment, std::string name, jfieldID nativeField) {
+        std::string name, jfieldID nativeField) {
     return {
-            environment,
+            
             std::move(name),
             nativeField,
             [](JNIEnv *env, jobject obj, jfieldID fld) {
@@ -179,9 +179,9 @@ JavaField<jfloat> JavaField<jfloat>::newInstance(
 
 template<>
 JavaField<jdouble> JavaField<jdouble>::newInstance(
-        JNIEnv *environment, std::string name, jfieldID nativeField) {
+        std::string name, jfieldID nativeField) {
     return {
-            environment,
+            
             std::move(name),
             nativeField,
             [](JNIEnv *env, jobject obj, jfieldID fld) {
@@ -201,21 +201,21 @@ JavaField<jdouble> JavaField<jdouble>::newInstance(
 
 template<>
 JavaField<JavaObject> JavaField<JavaObject>::newInstance(
-        JNIEnv *environment, std::string name, jfieldID nativeField) {
+        std::string name, jfieldID nativeField) {
     return {
-            environment,
+            
             std::move(name),
             nativeField,
             [](JNIEnv *env, jobject obj, jfieldID fld) {
                 jobject res = env->GetObjectField(obj, fld);
-                return JavaObject(env, res);
+                return JavaObject(res);
             },
             [](JNIEnv *env, jobject obj, jfieldID fld, JavaObject val) {
                 env->SetObjectField(obj, fld, val.nativeObject);
             },
             [](JNIEnv *env, jclass cls, jfieldID fld) {
                 jobject res = env->GetStaticObjectField(cls, fld);
-                return JavaObject(env, res);
+                return JavaObject(res);
             },
             [](JNIEnv *env, jclass cls, jfieldID fld, JavaObject val) {
                 env->SetStaticObjectField(cls, fld, val.nativeObject);

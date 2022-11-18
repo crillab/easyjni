@@ -42,7 +42,7 @@ namespace easyjni {
         /**
          * The Java environment in which this element has been declared.
          */
-        JNIEnv *environment;
+        //JNIEnv *environment;
 
         /**
          * The name of this element.
@@ -57,8 +57,8 @@ namespace easyjni {
          * @param environment The Java environment in which the element has been declared.
          * @param name The name of the element.
          */
-        JavaElement(JNIEnv *environment, std::string name);
-
+        JavaElement(std::string name);
+        JNIEnv* getEnvironment();
     public:
 
         /**

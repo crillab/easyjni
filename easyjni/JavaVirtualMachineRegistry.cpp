@@ -79,7 +79,7 @@ void JavaVirtualMachineRegistry::detachCurrentThread() {
 
     // Otherwise, the thread is detached and its JavaVirtualMachine is deleted.
     globalJvm->jvm->DetachCurrentThread();
-    delete jvm->second;
+    //delete jvm->second;
     jvmByThread.erase(this_thread::get_id());
 
     mutex.unlock();

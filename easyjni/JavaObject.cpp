@@ -18,15 +18,16 @@
  * If not, see {@link http://www.gnu.org/licenses}.
  */
 
-#include "JavaClass.h"
-#include "JavaMethod.h"
+
 #include "JavaObject.h"
+#include "JavaMethod.h"
+#include "JavaClass.h"
+#include "JavaVirtualMachineRegistry.h"
 
 using namespace easyjni;
 using namespace std;
 
-JavaObject::JavaObject(JNIEnv *environment, jobject nativeObject) :
-        environment(environment),
+JavaObject::JavaObject(jobject nativeObject) :
         nativeObject(nativeObject) {
     // Nothing to do: everything is already initialized.
 }
@@ -40,8 +41,8 @@ jobject JavaObject::operator*() {
 }
 
 JavaClass JavaObject::getClass() {
-    jclass cls = environment->GetObjectClass(nativeObject);
-    return JavaClass(environment, "<unknown-class>", cls);
+    jclass cls = JavaVirtualMachineRegistry::get()->env->GetObjectClass(nativeObject);
+    return JavaClass("<unknown-class>", cls);
 }
 
 int JavaObject::hashCode() {
@@ -61,8 +62,8 @@ string JavaObject::toString() {
     auto method = metaClass.getObjectMethod("toString", METHOD(CLASS(java/lang/String)));
     auto str = method.invoke(*this);
     auto javaString = (jstring) str.nativeObject;
-    const char *nativeString = environment->GetStringUTFChars(javaString, nullptr);
+    const char *nativeString = JavaVirtualMachineRegistry::get()->env->GetStringUTFChars(javaString, nullptr);
     string cppString(nativeString);
-    environment->ReleaseStringUTFChars(javaString, nativeString);
+    JavaVirtualMachineRegistry::get()->env->ReleaseStringUTFChars(javaString, nativeString);
     return cppString;
 }

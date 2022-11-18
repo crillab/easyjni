@@ -21,6 +21,9 @@
 #include "JavaMethod.h"
 #include "JavaVirtualMachine.h"
 #include "JniException.h"
+#include "JavaClass.h"
+#include "JavaObject.h"
+#include "JavaArray.h"
 
 using namespace easyjni;
 using namespace std;
@@ -49,13 +52,13 @@ JavaClass JavaVirtualMachine::loadClass(const string &name) {
     jclass nativeClass = env->FindClass(name.c_str());
     if (nativeClass == nullptr) {
         if (env->ExceptionCheck()) {
-            JavaObject except(env, env->ExceptionOccurred());
+            JavaObject except(env->ExceptionOccurred());
             env->ExceptionClear();
             throw JniException(except.toString());
         }
         throw JniException("Could not load class " + name);
     }
-    return JavaClass(env, name, nativeClass);
+    return JavaClass(name, nativeClass);
 }
 
 JavaObject JavaVirtualMachine::toJavaString(const string &str) {
@@ -63,7 +66,7 @@ JavaObject JavaVirtualMachine::toJavaString(const string &str) {
 }
 
 JavaObject JavaVirtualMachine::toJavaString(const char *str) {
-    return JavaObject(env, env->NewStringUTF(str));
+    return JavaObject(env->NewStringUTF(str));
 }
 
 JavaObject JavaVirtualMachine::wrap(jboolean b) {
@@ -164,45 +167,45 @@ jdouble JavaVirtualMachine::unwrapAsDouble(const JavaObject &d) {
 
 JavaArray<jboolean> JavaVirtualMachine::createBooleanArray(int size) {
     auto array = env->NewBooleanArray(size);
-    return JavaArray<jboolean>(env, array);
+    return JavaArray<jboolean>(array);
 }
 
 JavaArray<jbyte> JavaVirtualMachine::createByteArray(int size) {
     auto array = env->NewByteArray(size);
-    return JavaArray<jbyte>(env, array);
+    return JavaArray<jbyte>(array);
 }
 
 JavaArray<jchar> JavaVirtualMachine::createCharArray(int size) {
     auto array = env->NewCharArray(size);
-    return JavaArray<jchar>(env, array);
+    return JavaArray<jchar>( array);
 }
 
 JavaArray<jshort> JavaVirtualMachine::createShortArray(int size) {
     auto array = env->NewShortArray(size);
-    return JavaArray<jshort>(env, array);
+    return JavaArray<jshort>( array);
 }
 
 JavaArray<jint> JavaVirtualMachine::createIntArray(int size) {
     auto array = env->NewIntArray(size);
-    return JavaArray<jint>(env, array);
+    return JavaArray<jint>( array);
 }
 
 JavaArray<jlong> JavaVirtualMachine::createLongArray(int size) {
     auto array = env->NewLongArray(size);
-    return JavaArray<jlong>(env, array);
+    return JavaArray<jlong>( array);
 }
 
 JavaArray<jfloat> JavaVirtualMachine::createFloatArray(int size) {
     auto array = env->NewFloatArray(size);
-    return JavaArray<jfloat>(env, array);
+    return JavaArray<jfloat>( array);
 }
 
 JavaArray<jdouble> JavaVirtualMachine::createDoubleArray(int size) {
     auto array = env->NewDoubleArray(size);
-    return JavaArray<jdouble>(env, array);
+    return JavaArray<jdouble>( array);
 }
 
 JavaArray<JavaObject> JavaVirtualMachine::createObjectArray(int size, const JavaClass &clazz) {
     auto array = env->NewObjectArray(size, clazz.nativeClass, nullptr);
-    return JavaArray<JavaObject>(env, array);
+    return JavaArray<JavaObject>( array);
 }

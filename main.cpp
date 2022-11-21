@@ -47,7 +47,7 @@ int buildJvmFromArguments(int argc, char *argv[], string &mainClass) {
     builder.setVersion(JNI_VERSION_10);
 
     // Parsing named arguments.
-    for (int opt; (opt = getopt(argc, argv, "c:m:")) != -1;) {
+    for (int opt; (opt = getopt(argc, argv, "+c:m:")) != -1;) {
         if (optopt != opt) {
             string message = "Missing argument for option `-";
             message += (char) optopt;

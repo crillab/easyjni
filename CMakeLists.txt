@@ -27,6 +27,8 @@ add_library(libeasyjni
         easyjni/JniException.h easyjni/JniException.cpp)
 target_link_libraries(libeasyjni ${JNI_LIBRARIES})
 
-# Adding the executable (for demonstration purposes) to the build targets.
-add_executable(easyjni-demo main.cpp)
-target_link_libraries(easyjni-demo libeasyjni)
+if (UNIX)
+    # Adding the executable (for demonstration purposes) to the build targets.
+    add_executable(easyjni-demo main.cpp)
+    target_link_libraries(easyjni-demo libeasyjni)
+endif (UNIX)

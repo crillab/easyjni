@@ -23,6 +23,7 @@
 #include <string>
 
 #include <jni.h>
+#include <iostream>
 
 #include "easyjni/JavaClass.h"
 #include "easyjni/JavaMethod.h"
@@ -45,10 +46,11 @@ using namespace std;
 int buildJvmFromArguments(int argc, char *argv[], string &mainClass) {
     JavaVirtualMachineBuilder builder;
     builder.setVersion(JNI_VERSION_10);
+    opterr = 0;
 
     // Parsing named arguments.
-    for (int opt; (opt = getopt(argc, argv, "+c:m:")) != -1;) {
-        if (optopt != opt) {
+    for (int opt; (opt = getopt(argc, argv, ":c:m:")) != -1;) {
+        if (opt == ':') {
             string message = "Missing argument for option `-";
             message += (char) optopt;
             message += '\'';
@@ -61,10 +63,9 @@ int buildJvmFromArguments(int argc, char *argv[], string &mainClass) {
             mainClass = string(optarg);
 
         } else {
-            string message = "Invalid value for option `-";
+            string message = "Unknown option `-";
             message += (char) optopt;
-            message += "': ";
-            message += optarg;
+            message += '\'';
             throw invalid_argument(message);
         }
     }

@@ -87,12 +87,12 @@ namespace easyjni {
          * @param staticGetter The function to use to get the static value of the field in the class.
          * @param staticSetter The function to use to set the static value of the field in the class.
          */
-        JavaField(JNIEnv *environment, std::string name, jfieldID nativeField,
+        JavaField( std::string name, jfieldID nativeField,
                   std::function<T(JNIEnv *, jobject, jfieldID)> getter,
                   std::function<void(JNIEnv *, jobject, jfieldID, T)> setter,
                   std::function<T(JNIEnv *, jclass, jfieldID)> staticGetter,
                   std::function<void(JNIEnv *, jclass, jfieldID, T)> staticSetter) :
-                JavaElement(environment, std::move(name)),
+                JavaElement(std::move(name)),
                 nativeField(nativeField),
                 getter(getter),
                 setter(setter),
@@ -110,7 +110,7 @@ namespace easyjni {
          *
          * @return The created JavaField.
          */
-        static JavaField<T> newInstance(JNIEnv *environment, std::string name, jfieldID nativeField);
+        static JavaField<T> newInstance(std::string name, jfieldID nativeField);
 
     public:
 
@@ -124,7 +124,7 @@ namespace easyjni {
          * @throws JniException If an error occurred while getting the field.
          */
         T get(easyjni::JavaObject &object) {
-            return getter(environment, object.nativeObject, nativeField);
+            return getter(getEnvironment(), object.nativeObject, nativeField);
         }
 
         /**
@@ -136,7 +136,7 @@ namespace easyjni {
          * @throws JniException If an error occurred while setting the field.
          */
         void set(easyjni::JavaObject &object, T value) {
-            setter(environment, object.nativeObject, nativeField, value);
+            setter(getEnvironment(), object.nativeObject, nativeField, value);
         }
 
         /**
@@ -149,7 +149,7 @@ namespace easyjni {
          * @throws JniException If an error occurred while getting the field.
          */
         T getStatic(easyjni::JavaClass &clazz) {
-            return staticGetter(environment, clazz.nativeClass, nativeField);
+            return staticGetter(getEnvironment(), clazz.nativeClass, nativeField);
         }
 
         /**
@@ -161,7 +161,7 @@ namespace easyjni {
          * @throws JniException If an error occurred while setting the field.
          */
         void setStatic(easyjni::JavaClass &clazz, T value) {
-            staticSetter(environment, clazz.nativeClass, value);
+            staticSetter(getEnvironment(), clazz.nativeClass, value);
         }
 
         /**

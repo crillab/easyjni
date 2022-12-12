@@ -25,11 +25,11 @@
 
 #include <jni.h>
 
-#include "JavaArray.h"
-#include "JavaClass.h"
 
 namespace easyjni {
-
+    template<typename T> class JavaArray;
+    class JavaObject;
+    class JavaClass;
     /**
      * The JavaVirtualMachine class encapsulates the instance of the Java
      * Virtual Machine to use to run Java code.
@@ -40,7 +40,7 @@ namespace easyjni {
      */
     class JavaVirtualMachine {
 
-    private:
+    public:
 
         /**
          * The native Java Virtual Machine provided by JNI.
@@ -390,6 +390,10 @@ namespace easyjni {
          * to attach a thread to a JavaVirtualMachine.
          */
         friend class JavaVirtualMachineRegistry;
+
+        friend class JavaElement;
+
+        friend class JavaVirtualMachine;
 
     };
 

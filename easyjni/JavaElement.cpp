@@ -19,16 +19,20 @@
  */
 
 #include "JavaElement.h"
+#include "JavaVirtualMachineRegistry.h"
 
 using namespace easyjni;
 using namespace std;
 
-JavaElement::JavaElement(JNIEnv *environment, string name) :
-        environment(environment),
+JavaElement::JavaElement(string name) :
         name(std::move(name)) {
     // Nothing to do: everything is already initialized.
 }
 
 const string &JavaElement::getName() const {
     return name;
+}
+
+JNIEnv *JavaElement::getEnvironment() {
+    return JavaVirtualMachineRegistry::get()->env;
 }

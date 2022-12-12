@@ -26,14 +26,14 @@
 using namespace easyjni;
 using namespace std;
 
-JavaClass::JavaClass(JNIEnv *environment, string name, jclass nativeClass) :
-        JavaElement(environment, std::move(name)),
+JavaClass::JavaClass( string name, jclass nativeClass) :
+        JavaElement( std::move(name)),
         nativeClass(nativeClass) {
     // Nothing to do: everything is already initialized.
 }
 
 JavaObject JavaClass::asObject() {
-    return JavaObject(environment, nativeClass);
+    return JavaObject(nativeClass);
 }
 
 bool JavaClass::isArray() {
@@ -67,98 +67,98 @@ bool JavaClass::isInstance(JavaObject &object) {
 
 JavaField<jboolean> JavaClass::getBooleanField(const string &name) {
     jfieldID field = getFieldID(name, BOOLEAN);
-    return JavaField<jboolean>::newInstance(environment, name, field);
+    return JavaField<jboolean>::newInstance(name, field);
 }
 
 JavaField<jbyte> JavaClass::getByteField(const string &name) {
     jfieldID field = getFieldID(name, BYTE);
-    return JavaField<jbyte>::newInstance(environment, name, field);
+    return JavaField<jbyte>::newInstance(name, field);
 }
 
 JavaField<jchar> JavaClass::getCharField(const string &name) {
     jfieldID field = getFieldID(name, CHARACTER);
-    return JavaField<jchar>::newInstance(environment, name, field);
+    return JavaField<jchar>::newInstance( name, field);
 }
 
 JavaField<jshort> JavaClass::getShortField(const string &name) {
     jfieldID field = getFieldID(name, SHORT);
-    return JavaField<jshort>::newInstance(environment, name, field);
+    return JavaField<jshort>::newInstance( name, field);
 }
 
 JavaField<jint> JavaClass::getIntField(const string &name) {
     jfieldID field = getFieldID(name, INTEGER);
-    return JavaField<jint>::newInstance(environment, name, field);
+    return JavaField<jint>::newInstance( name, field);
 }
 
 JavaField<jlong> JavaClass::getLongField(const string &name) {
     jfieldID field = getFieldID(name, LONG);
-    return JavaField<jlong>::newInstance(environment, name, field);
+    return JavaField<jlong>::newInstance( name, field);
 }
 
 JavaField<jfloat> JavaClass::getFloatField(const string &name) {
     jfieldID field = getFieldID(name, FLOAT);
-    return JavaField<jfloat>::newInstance(environment, name, field);
+    return JavaField<jfloat>::newInstance( name, field);
 }
 
 JavaField<jdouble> JavaClass::getDoubleField(const string &name) {
     jfieldID field = getFieldID(name, DOUBLE);
-    return JavaField<jdouble>::newInstance(environment, name, field);
+    return JavaField<jdouble>::newInstance( name, field);
 }
 
 JavaField<JavaObject> JavaClass::getObjectField(const string &name, const string &signature) {
     jfieldID field = getFieldID(name, signature);
-    return JavaField<JavaObject>::newInstance(environment, name, field);
+    return JavaField<JavaObject>::newInstance( name, field);
 }
 
 JavaField<jboolean> JavaClass::getStaticBooleanField(const string &name) {
     jfieldID field = getStaticFieldID(name, BOOLEAN);
-    return JavaField<jboolean>::newInstance(environment, name, field);
+    return JavaField<jboolean>::newInstance( name, field);
 }
 
 JavaField<jbyte> JavaClass::getStaticByteField(const string &name) {
     jfieldID field = getStaticFieldID(name, BYTE);
-    return JavaField<jbyte>::newInstance(environment, name, field);
+    return JavaField<jbyte>::newInstance( name, field);
 }
 
 JavaField<jchar> JavaClass::getStaticCharField(const string &name) {
     jfieldID field = getStaticFieldID(name, CHARACTER);
-    return JavaField<jchar>::newInstance(environment, name, field);
+    return JavaField<jchar>::newInstance( name, field);
 }
 
 JavaField<jshort> JavaClass::getStaticShortField(const string &name) {
     jfieldID field = getStaticFieldID(name, SHORT);
-    return JavaField<jshort>::newInstance(environment, name, field);
+    return JavaField<jshort>::newInstance( name, field);
 }
 
 JavaField<jint> JavaClass::getStaticIntField(const string &name) {
     jfieldID field = getStaticFieldID(name, INTEGER);
-    return JavaField<jint>::newInstance(environment, name, field);
+    return JavaField<jint>::newInstance( name, field);
 }
 
 JavaField<jlong> JavaClass::getStaticLongField(const string &name) {
     jfieldID field = getStaticFieldID(name, LONG);
-    return JavaField<jlong>::newInstance(environment, name, field);
+    return JavaField<jlong>::newInstance( name, field);
 }
 
 JavaField<jfloat> JavaClass::getStaticFloatField(const string &name) {
     jfieldID field = getStaticFieldID(name, FLOAT);
-    return JavaField<jfloat>::newInstance(environment, name, field);
+    return JavaField<jfloat>::newInstance( name, field);
 }
 
 JavaField<jdouble> JavaClass::getStaticDoubleField(const string &name) {
     jfieldID field = getStaticFieldID(name, DOUBLE);
-    return JavaField<jdouble>::newInstance(environment, name, field);
+    return JavaField<jdouble>::newInstance( name, field);
 }
 
 JavaField<JavaObject> JavaClass::getStaticObjectField(const string &name, const string &signature) {
     jfieldID field = getStaticFieldID(name, signature);
-    return JavaField<JavaObject>::newInstance(environment, name, field);
+    return JavaField<JavaObject>::newInstance( name, field);
 }
 
 JavaMethod<JavaObject> JavaClass::getConstructor(const string &signature) {
     jmethodID constructor = getMethodID("<init>", signature);
     return {
-        environment,
+
         "<init>",
         constructor,
         [](JNIEnv *env, jobject obj, jmethodID mtd, va_list args) -> JavaObject {
@@ -166,7 +166,7 @@ JavaMethod<JavaObject> JavaClass::getConstructor(const string &signature) {
         },
         [](JNIEnv *env, jclass cls, jmethodID mtd, va_list args) -> JavaObject {
             jobject res = env->NewObjectV(cls, mtd, args);
-            return JavaObject(env, res);
+            return JavaObject(res);
         }
     };
 }
@@ -174,124 +174,124 @@ JavaMethod<JavaObject> JavaClass::getConstructor(const string &signature) {
 JavaObject JavaClass::newInstance() {
     // Invoking the default constructor.
     jmethodID constructor = getMethodID("<init>", CONSTRUCTOR());
-    jobject nativeObject = environment->NewObject(nativeClass, constructor);
+    jobject nativeObject = getEnvironment()->NewObject(nativeClass, constructor);
 
     // Checking if an exception occurred.
-    if (environment->ExceptionCheck()) {
-        JavaObject except(environment, environment->ExceptionOccurred());
-        environment->ExceptionClear();
+    if (getEnvironment()->ExceptionCheck()) {
+        JavaObject except(getEnvironment()->ExceptionOccurred());
+        getEnvironment()->ExceptionClear();
         throw JniException(except.toString());
     }
 
-    return JavaObject(environment, nativeObject);
+    return JavaObject(nativeObject);
 }
 
 JavaMethod<void *> JavaClass::getMethod(const string &name, const string &signature) {
     jmethodID method = getMethodID(name, signature);
-    return JavaMethod<void *>::newInstance(environment, name, method);
+    return JavaMethod<void *>::newInstance( name, method);
 }
 
 JavaMethod<jboolean> JavaClass::getBooleanMethod(const string &name, const string &signature) {
     jmethodID method = getMethodID(name, signature);
-    return JavaMethod<jboolean>::newInstance(environment, name, method);
+    return JavaMethod<jboolean>::newInstance( name, method);
 }
 
 JavaMethod<jbyte> JavaClass::getByteMethod(const string &name, const string &signature) {
     jmethodID method = getMethodID(name, signature);
-    return JavaMethod<jbyte>::newInstance(environment, name, method);
+    return JavaMethod<jbyte>::newInstance( name, method);
 }
 
 JavaMethod<jchar> JavaClass::getCharMethod(const string &name, const string &signature) {
     jmethodID method = getMethodID(name, signature);
-    return JavaMethod<jchar>::newInstance(environment, name, method);
+    return JavaMethod<jchar>::newInstance( name, method);
 }
 
 JavaMethod<jshort> JavaClass::getShortMethod(const string &name, const string &signature) {
     jmethodID method = getMethodID(name, signature);
-    return JavaMethod<jshort>::newInstance(environment, name, method);
+    return JavaMethod<jshort>::newInstance( name, method);
 }
 
 JavaMethod<jint> JavaClass::getIntMethod(const string &name, const string &signature) {
     jmethodID method = getMethodID(name, signature);
-    return JavaMethod<jint>::newInstance(environment, name, method);
+    return JavaMethod<jint>::newInstance( name, method);
 }
 
 JavaMethod<jlong> JavaClass::getLongMethod(const string &name, const string &signature) {
     jmethodID method = getMethodID(name, signature);
-    return JavaMethod<jlong>::newInstance(environment, name, method);
+    return JavaMethod<jlong>::newInstance( name, method);
 }
 
 JavaMethod<jfloat> JavaClass::getFloatMethod(const string &name, const string &signature) {
     jmethodID method = getMethodID(name, signature);
-    return JavaMethod<jfloat>::newInstance(environment, name, method);
+    return JavaMethod<jfloat>::newInstance( name, method);
 }
 
 JavaMethod<jdouble> JavaClass::getDoubleMethod(const string &name, const string &signature) {
     jmethodID method = getMethodID(name, signature);
-    return JavaMethod<jdouble>::newInstance(environment, name, method);
+    return JavaMethod<jdouble>::newInstance( name, method);
 }
 
 JavaMethod<JavaObject> JavaClass::getObjectMethod(const string &name, const string &signature) {
     jmethodID method = getMethodID(name, signature);
-    return JavaMethod<JavaObject>::newInstance(environment, name, method);
+    return JavaMethod<JavaObject>::newInstance( name, method);
 }
 
 JavaMethod<void *> JavaClass::getStaticMethod(const string &name, const string &signature) {
     jmethodID method = getStaticMethodID(name, signature);
-    return JavaMethod<void *>::newInstance(environment, name, method);
+    return JavaMethod<void *>::newInstance( name, method);
 }
 
 JavaMethod<jboolean> JavaClass::getStaticBooleanMethod(const string &name, const string &signature) {
     jmethodID method = getStaticMethodID(name, signature);
-    return JavaMethod<jboolean>::newInstance(environment, name, method);
+    return JavaMethod<jboolean>::newInstance( name, method);
 }
 
 JavaMethod<jbyte> JavaClass::getStaticByteMethod(const string &name, const string &signature) {
     jmethodID method = getStaticMethodID(name, signature);
-    return JavaMethod<jbyte>::newInstance(environment, name, method);
+    return JavaMethod<jbyte>::newInstance( name, method);
 }
 
 JavaMethod<jchar> JavaClass::getStaticCharMethod(const string &name, const string &signature) {
     jmethodID method = getStaticMethodID(name, signature);
-    return JavaMethod<jchar>::newInstance(environment, name, method);
+    return JavaMethod<jchar>::newInstance( name, method);
 }
 
 JavaMethod<jshort> JavaClass::getStaticShortMethod(const string &name, const string &signature) {
     jmethodID method = getStaticMethodID(name, signature);
-    return JavaMethod<jshort>::newInstance(environment, name, method);
+    return JavaMethod<jshort>::newInstance( name, method);
 }
 
 JavaMethod<jint> JavaClass::getStaticIntMethod(const string &name, const string &signature) {
     jmethodID method = getStaticMethodID(name, signature);
-    return JavaMethod<jint>::newInstance(environment, name, method);
+    return JavaMethod<jint>::newInstance( name, method);
 }
 
 JavaMethod<jlong> JavaClass::getStaticLongMethod(const string &name, const string &signature) {
     jmethodID method = getStaticMethodID(name, signature);
-    return JavaMethod<jlong>::newInstance(environment, name, method);
+    return JavaMethod<jlong>::newInstance( name, method);
 }
 
 JavaMethod<jfloat> JavaClass::getStaticFloatMethod(const string &name, const string &signature) {
     jmethodID method = getStaticMethodID(name, signature);
-    return JavaMethod<jfloat>::newInstance(environment, name, method);
+    return JavaMethod<jfloat>::newInstance( name, method);
 }
 
 JavaMethod<jdouble> JavaClass::getStaticDoubleMethod(const string &name, const string &signature) {
     jmethodID method = getStaticMethodID(name, signature);
-    return JavaMethod<jdouble>::newInstance(environment, name, method);
+    return JavaMethod<jdouble>::newInstance( name, method);
 }
 
 JavaMethod<JavaObject> JavaClass::getStaticObjectMethod(const string &name, const string &signature) {
     jmethodID method = getStaticMethodID(name, signature);
-    return JavaMethod<JavaObject>::newInstance(environment, name, method);
+    return JavaMethod<JavaObject>::newInstance( name, method);
 }
 
 jfieldID JavaClass::getFieldID(const string &name, const string &signature) {
-    jfieldID field = environment->GetFieldID(nativeClass, name.c_str(), signature.c_str());
+    jfieldID field = getEnvironment()->GetFieldID(nativeClass, name.c_str(), signature.c_str());
     if (field == nullptr) {
-        if (environment->ExceptionCheck()) {
-            JavaObject except(environment, environment->ExceptionOccurred());
-            environment->ExceptionClear();
+        if (getEnvironment()->ExceptionCheck()) {
+            JavaObject except(getEnvironment()->ExceptionOccurred());
+            getEnvironment()->ExceptionClear();
             throw JniException(except.toString());
         }
         throw JniException("Could not find field " + name + " for class " + getName());
@@ -300,11 +300,11 @@ jfieldID JavaClass::getFieldID(const string &name, const string &signature) {
 }
 
 jfieldID JavaClass::getStaticFieldID(const string &name, const string &signature) {
-    jfieldID field = environment->GetStaticFieldID(nativeClass, name.c_str(), signature.c_str());
+    jfieldID field = getEnvironment()->GetStaticFieldID(nativeClass, name.c_str(), signature.c_str());
     if (field == nullptr) {
-        if (environment->ExceptionCheck()) {
-            JavaObject except(environment, environment->ExceptionOccurred());
-            environment->ExceptionClear();
+        if (getEnvironment()->ExceptionCheck()) {
+            JavaObject except(getEnvironment()->ExceptionOccurred());
+            getEnvironment()->ExceptionClear();
             throw JniException(except.toString());
         }
         throw JniException("Could not find static field " + name + " for class " + getName());
@@ -313,11 +313,11 @@ jfieldID JavaClass::getStaticFieldID(const string &name, const string &signature
 }
 
 jmethodID JavaClass::getMethodID(const string &name, const string &signature) {
-    jmethodID method = environment->GetMethodID(nativeClass, name.c_str(), signature.c_str());
+    jmethodID method = getEnvironment()->GetMethodID(nativeClass, name.c_str(), signature.c_str());
     if (method == nullptr) {
-        if (environment->ExceptionCheck()) {
-            JavaObject except(environment, environment->ExceptionOccurred());
-            environment->ExceptionClear();
+        if (getEnvironment()->ExceptionCheck()) {
+            JavaObject except(getEnvironment()->ExceptionOccurred());
+            getEnvironment()->ExceptionClear();
             throw JniException(except.toString());
         }
         throw JniException("Could not find method " + name + " for class " + getName());
@@ -326,11 +326,11 @@ jmethodID JavaClass::getMethodID(const string &name, const string &signature) {
 }
 
 jmethodID JavaClass::getStaticMethodID(const string &name, const string &signature) {
-    jmethodID method = environment->GetStaticMethodID(nativeClass, name.c_str(), signature.c_str());
+    jmethodID method = getEnvironment()->GetStaticMethodID(nativeClass, name.c_str(), signature.c_str());
     if (method == nullptr) {
-        if (environment->ExceptionCheck()) {
-            JavaObject except(environment, environment->ExceptionOccurred());
-            environment->ExceptionClear();
+        if (getEnvironment()->ExceptionCheck()) {
+            JavaObject except(getEnvironment()->ExceptionOccurred());
+            getEnvironment()->ExceptionClear();
             throw JniException(except.toString());
         }
         throw JniException("Could not find static method " + name + " for class " + getName());

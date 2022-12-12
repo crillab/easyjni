@@ -24,10 +24,9 @@ using namespace easyjni;
 using namespace std;
 
 template<>
-JavaMethod<void *> JavaMethod<void *>::newInstance(
-        JNIEnv *environment, std::string name, jmethodID nativeMethod) {
+JavaMethod<void *> JavaMethod<void *>::newInstance(std::string name, jmethodID nativeMethod) {
     return {
-            environment,
+            
             std::move(name),
             nativeMethod,
             [](JNIEnv *env, jobject obj, jmethodID mtd, va_list args) {
@@ -42,10 +41,9 @@ JavaMethod<void *> JavaMethod<void *>::newInstance(
 }
 
 template<>
-JavaMethod<jboolean> JavaMethod<jboolean>::newInstance(
-        JNIEnv *environment, std::string name, jmethodID nativeMethod) {
+JavaMethod<jboolean> JavaMethod<jboolean>::newInstance( std::string name, jmethodID nativeMethod) {
     return {
-            environment,
+            
             std::move(name),
             nativeMethod,
             [](JNIEnv *env, jobject obj, jmethodID mtd, va_list args) {
@@ -58,10 +56,9 @@ JavaMethod<jboolean> JavaMethod<jboolean>::newInstance(
 }
 
 template<>
-JavaMethod<jbyte> JavaMethod<jbyte>::newInstance(
-        JNIEnv *environment, std::string name, jmethodID nativeMethod) {
+JavaMethod<jbyte> JavaMethod<jbyte>::newInstance( std::string name, jmethodID nativeMethod) {
     return {
-            environment,
+            
             std::move(name),
             nativeMethod,
             [](JNIEnv *env, jobject obj, jmethodID mtd, va_list args) {
@@ -74,10 +71,9 @@ JavaMethod<jbyte> JavaMethod<jbyte>::newInstance(
 }
 
 template<>
-JavaMethod<jchar> JavaMethod<jchar>::newInstance(
-        JNIEnv *environment, std::string name, jmethodID nativeMethod) {
+JavaMethod<jchar> JavaMethod<jchar>::newInstance( std::string name, jmethodID nativeMethod) {
     return {
-            environment,
+            
             std::move(name),
             nativeMethod,
             [](JNIEnv *env, jobject obj, jmethodID mtd, va_list args) {
@@ -90,10 +86,9 @@ JavaMethod<jchar> JavaMethod<jchar>::newInstance(
 }
 
 template<>
-JavaMethod<jshort> JavaMethod<jshort>::newInstance(
-        JNIEnv *environment, std::string name, jmethodID nativeMethod) {
+JavaMethod<jshort> JavaMethod<jshort>::newInstance( std::string name, jmethodID nativeMethod) {
     return {
-            environment,
+            
             std::move(name),
             nativeMethod,
             [](JNIEnv *env, jobject obj, jmethodID mtd, va_list args) {
@@ -106,10 +101,9 @@ JavaMethod<jshort> JavaMethod<jshort>::newInstance(
 }
 
 template<>
-JavaMethod<jint> JavaMethod<jint>::newInstance(
-        JNIEnv *environment, std::string name, jmethodID nativeMethod) {
+JavaMethod<jint> JavaMethod<jint>::newInstance( std::string name, jmethodID nativeMethod) {
     return {
-            environment,
+            
             std::move(name),
             nativeMethod,
             [](JNIEnv *env, jobject obj, jmethodID mtd, va_list args) {
@@ -122,10 +116,9 @@ JavaMethod<jint> JavaMethod<jint>::newInstance(
 }
 
 template<>
-JavaMethod<jlong> JavaMethod<jlong>::newInstance(
-        JNIEnv *environment, std::string name, jmethodID nativeMethod) {
+JavaMethod<jlong> JavaMethod<jlong>::newInstance( std::string name, jmethodID nativeMethod) {
     return {
-            environment,
+            
             std::move(name),
             nativeMethod,
             [](JNIEnv *env, jobject obj, jmethodID mtd, va_list args) {
@@ -138,10 +131,9 @@ JavaMethod<jlong> JavaMethod<jlong>::newInstance(
 }
 
 template<>
-JavaMethod<jfloat> JavaMethod<jfloat>::newInstance(
-        JNIEnv *environment, std::string name, jmethodID nativeMethod) {
+JavaMethod<jfloat> JavaMethod<jfloat>::newInstance( std::string name, jmethodID nativeMethod) {
     return {
-            environment,
+            
             std::move(name),
             nativeMethod,
             [](JNIEnv *env, jobject obj, jmethodID mtd, va_list args) {
@@ -154,10 +146,9 @@ JavaMethod<jfloat> JavaMethod<jfloat>::newInstance(
 }
 
 template<>
-JavaMethod<jdouble> JavaMethod<jdouble>::newInstance(
-        JNIEnv *environment, std::string name, jmethodID nativeMethod) {
+JavaMethod<jdouble> JavaMethod<jdouble>::newInstance( std::string name, jmethodID nativeMethod) {
     return {
-            environment,
+            
             std::move(name),
             nativeMethod,
             [](JNIEnv *env, jobject obj, jmethodID mtd, va_list args) {
@@ -170,19 +161,17 @@ JavaMethod<jdouble> JavaMethod<jdouble>::newInstance(
 }
 
 template<>
-JavaMethod<JavaObject> JavaMethod<JavaObject>::newInstance(
-        JNIEnv *environment, std::string name, jmethodID nativeMethod) {
+JavaMethod<JavaObject> JavaMethod<JavaObject>::newInstance( std::string name, jmethodID nativeMethod) {
     return {
-            environment,
             std::move(name),
             nativeMethod,
             [](JNIEnv *env, jobject obj, jmethodID mtd, va_list args) {
                 jobject res = env->CallObjectMethodV(obj, mtd, args);
-                return JavaObject(env, res);
+                return JavaObject(res);
             },
             [](JNIEnv *env, jclass cls, jmethodID mtd, va_list args) {
                 jobject res = env->CallStaticObjectMethodV(cls, mtd, args);
-                return JavaObject(env, res);
+                return JavaObject(res);
             }
     };
 }

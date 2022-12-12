@@ -69,16 +69,15 @@ namespace easyjni {
         /**
          * Creates a new JavaMethod.
          *
-         * @param environment The Java environment in which the method has been declared.
          * @param name The name of the method.
          * @param nativeMethod The native pointer to the method in the Java Virtual Machine.
          * @param call The function to use to invoke the method on a particular object.
          * @param staticCall The function to use to statically invoke the method on the class.
          */
-        JavaMethod(JNIEnv *environment, std::string name, jmethodID nativeMethod,
+        JavaMethod(std::string name, jmethodID nativeMethod,
                    std::function<T(JNIEnv *, jobject, jmethodID, va_list)> call,
                    std::function<T(JNIEnv *, jclass, jmethodID, va_list)> staticCall) :
-                JavaElement(environment, std::move(name)),
+                JavaElement(std::move(name)),
                 nativeMethod(nativeMethod),
                 call(call),
                 staticCall(staticCall) {
@@ -88,13 +87,12 @@ namespace easyjni {
         /**
          * Creates a new JavaMethod.
          *
-         * @param environment The Java environment in which the method has been declared.
          * @param name The name of the method.
          * @param nativeMethod The native pointer to the method in the Java Virtual Machine.
          *
          * @return The created JavaMethod.
          */
-        static JavaMethod<T> newInstance(JNIEnv *environment, std::string name, jmethodID nativeMethod);
+        static JavaMethod<T> newInstance(std::string name, jmethodID nativeMethod);
 
     public:
 
@@ -112,13 +110,13 @@ namespace easyjni {
             // Invoking the method.
             va_list args;
             va_start(args, object);
-            T result = call(environment, object.nativeObject, nativeMethod, args);
+            T result = call(getEnvironment(), object.nativeObject, nativeMethod, args);
             va_end(args);
 
             // Checking if an exception occurred.
-            if (environment->ExceptionCheck()) {
-                JavaObject except(environment, environment->ExceptionOccurred());
-                environment->ExceptionClear();
+            if (getEnvironment()->ExceptionCheck()) {
+                JavaObject except(getEnvironment()->ExceptionOccurred());
+                getEnvironment()->ExceptionClear();
                 throw JniException(except.toString());
             }
 
@@ -139,13 +137,13 @@ namespace easyjni {
             // Invoking the method.
             va_list args;
             va_start(args, clazz);
-            T result = staticCall(environment, clazz.nativeClass, nativeMethod, args);
+            T result = staticCall(getEnvironment(), clazz.nativeClass, nativeMethod, args);
             va_end(args);
 
             // Checking if an exception occurred.
-            if (environment->ExceptionCheck()) {
-                JavaObject except(environment, environment->ExceptionOccurred());
-                environment->ExceptionClear();
+            if (getEnvironment()->ExceptionCheck()) {
+                JavaObject except(getEnvironment()->ExceptionOccurred());
+                getEnvironment()->ExceptionClear();
                 throw JniException(except.toString());
             }
             return result;

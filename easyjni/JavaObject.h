@@ -25,10 +25,10 @@
 
 #include <jni.h>
 
-#include "JavaArray.h"
 
 namespace easyjni {
-
+    template<typename T>
+    class JavaArray;
     /**
      * Forward declaration of JavaClass, the class that represents the Java class of
      * an object from the Java Virtual Machine.
@@ -53,11 +53,6 @@ namespace easyjni {
     private:
 
         /**
-         * The Java environment in which this object has been created.
-         */
-        JNIEnv *environment;
-
-        /**
          * The native pointer to the object in the Java Virtual Machine.
          */
         jobject nativeObject;
@@ -70,7 +65,7 @@ namespace easyjni {
          * @param environment The Java environment in which the object has been created.
          * @param nativeObject Tha native pointer to the object in the Java Virtual Machine.
          */
-        JavaObject(JNIEnv *environment, jobject nativeObject);
+        JavaObject(jobject nativeObject);
 
     public:
 
@@ -85,7 +80,7 @@ namespace easyjni {
          */
         template<typename T>
         static easyjni::JavaObject fromArray(JavaArray<T> array) {
-            return JavaObject(array.environment, array.array);
+            return JavaObject(array.array);
         }
 
         /**
@@ -97,7 +92,7 @@ namespace easyjni {
          */
         template<typename T>
         easyjni::JavaArray<T> toArray() {
-            return JavaArray<T>::asArray(environment, nativeObject);
+            return JavaArray<T>::asArray(nativeObject);
         }
 
         /**

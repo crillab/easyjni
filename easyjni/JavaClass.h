@@ -70,7 +70,7 @@ namespace easyjni {
          * @param name The name of the class.
          * @param nativeClass The native pointer to the class in the Java Virtual Machine.
          */
-        JavaClass(JNIEnv *environment, std::string name, jclass nativeClass);
+        JavaClass(std::string name, jclass nativeClass);
 
     public:
 

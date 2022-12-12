@@ -22,6 +22,7 @@
 #define EASYJNI_JAVAARRAY_H
 
 #include <jni.h>
+#include "JavaVirtualMachineRegistry.h"
 
 namespace easyjni {
 
@@ -51,10 +52,6 @@ namespace easyjni {
 
     private:
 
-        /**
-         * The Java environment in which this array has been created.
-         */
-        JNIEnv *environment;
 
         /**
          * The native pointer to the array in the Java Virtual Machine.
@@ -69,8 +66,7 @@ namespace easyjni {
          * @param environment The Java environment in which the array has been created.
          * @param array The native pointer to the array in the Java Virtual Machine.
          */
-        JavaArray(JNIEnv *environment, jarray array) :
-                environment(environment),
+        JavaArray(jarray array) :
                 array(array) {
             // Nothing to do: everything is already initialized.
         }
@@ -83,8 +79,8 @@ namespace easyjni {
          *
          * @return The created JavaArray.
          */
-        static JavaArray<T> asArray(JNIEnv *environment, jobject object) {
-            return JavaArray(environment, (jarray) object);
+        static JavaArray<T> asArray(jobject object) {
+            return JavaArray((jarray) object);
         }
 
     public:
@@ -112,7 +108,7 @@ namespace easyjni {
          * @return The length of this array.
          */
         int length() {
-            return environment->GetArrayLength(array);
+            return JavaVirtualMachineRegistry::get()->env->GetArrayLength(array);
         }
 
         /**

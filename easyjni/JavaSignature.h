@@ -1,6 +1,6 @@
 /**
  * EasyJNI - Invoking Java code from C++ made easy.
- * Copyright (c) 2022 - Univ Artois & CNRS.
+ * Copyright (c) 2022 - Univ Artois & CNRS & Exakis Nelite.
  * All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -36,6 +36,7 @@
 #define ARRAY(t)    "[" t
 
 #define CLASS(t)    "L" #t ";"
+#define TYPE(t)     "L" t ";"
 
 #define CONSTRUCTOR(arguments)      "(" arguments ")V"
 #define METHOD(returnType, ...)     "(" __VA_ARGS__ ")" returnType

@@ -1,6 +1,6 @@
 /**
  * EasyJNI - Invoking Java code from C++ made easy.
- * Copyright (c) 2022 - Univ Artois & CNRS.
+ * Copyright (c) 2022 - Univ Artois & CNRS & Exakis Nelite.
  * All rights reserved.
  *
  * This library is free software; you can redistribute it and/or

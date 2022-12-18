@@ -1,6 +1,6 @@
 /**
  * EasyJNI - Invoking Java code from C++ made easy.
- * Copyright (c) 2022 - Univ Artois & CNRS.
+ * Copyright (c) 2022 - Univ Artois & CNRS & Exakis Nelite.
  * All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@
 namespace easyjni {
 
     /**
-     * The JavaVirtualMachineRegistry allows to make an instance of a Java
+     * The JavaVirtualMachineRegistry allows to make instances of the Java
      * Virtual Machine globally accessible.
      *
      * @author Romain Wallon
@@ -44,7 +44,7 @@ namespace easyjni {
         /**
          * The main instance of Java Virtual Machine.
          */
-        static easyjni::JavaVirtualMachine *globalJvm;
+        static easyjni::JavaVirtualMachine *mainJvm;
 
         /**
          * The Java Virtual Machines to which the different threads are attached.
@@ -73,12 +73,20 @@ namespace easyjni {
         static void set(JavaVirtualMachine *jvm);
 
         /**
-         * Gives the global instance of Java Virtual Machine.
+         * Gives the instance of Java Virtual Machine attached to the current thread.
          *
-         * @return The current global instance of Java Virtual Machine, or nullptr
-         *         if no Java Virtual Machine has been registered yet.
+         * @return The instance of Java Virtual Machine, or nullptr if no Java Virtual Machine
+         *         has been registered yet.
          */
         static JavaVirtualMachine *get();
+
+        /**
+         * Gives the environment of the Java Virtual Machine attached to the current thread.
+         *
+         * @return The environment of the Java Virtual Machine, or nullptr if no Java Virtual
+         *         Machine has been registered yet.
+         */
+        static JNIEnv *getEnvironment();
 
         /**
          * Detaches the current thread from the Java Virtual Machine.
@@ -88,7 +96,7 @@ namespace easyjni {
         static void detachCurrentThread();
 
         /**
-         * Destroys the current global instance of Java Virtual Machine.
+         * Destroys the main instance of Java Virtual Machine.
          */
         static void clear();
 

@@ -1,6 +1,6 @@
 /**
  * EasyJNI - Invoking Java code from C++ made easy.
- * Copyright (c) 2022 - Univ Artois & CNRS.
+ * Copyright (c) 2022 - Univ Artois & CNRS & Exakis Nelite.
  * All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -24,18 +24,18 @@
 using namespace easyjni;
 using namespace std;
 
-JavaVirtualMachine *JavaVirtualMachineRegistry::globalJvm = nullptr;
+JavaVirtualMachine *JavaVirtualMachineRegistry::mainJvm = nullptr;
 map<thread::id, JavaVirtualMachine *> JavaVirtualMachineRegistry::jvmByThread;
 mutex JavaVirtualMachineRegistry::mutex;
 
 void JavaVirtualMachineRegistry::set(JavaVirtualMachine *jvm) {
     mutex.lock();
-    if (globalJvm != nullptr) {
+    if (mainJvm != nullptr) {
         mutex.unlock();
         throw JniException("A Java Virtual Machine already exists");
     }
 
-    globalJvm = jvm;
+    mainJvm = jvm;
     jvmByThread[this_thread::get_id()] = jvm;
 
     mutex.unlock();
@@ -53,12 +53,20 @@ JavaVirtualMachine *JavaVirtualMachineRegistry::get() {
 
     // The current thread has to be attached to a "new" JVM.
     JNIEnv *env;
-    globalJvm->jvm->AttachCurrentThread((void **) &env, nullptr);
-    auto newJvm = new JavaVirtualMachine(globalJvm->jvm, env, false);
+    mainJvm->jvm->AttachCurrentThread((void **) &env, nullptr);
+    auto newJvm = new JavaVirtualMachine(mainJvm->jvm, env, false);
     jvmByThread[this_thread::get_id()] = newJvm;
 
     mutex.unlock();
     return newJvm;
+}
+
+JNIEnv *JavaVirtualMachineRegistry::getEnvironment() {
+    auto jvm = get();
+    if (jvm == nullptr) {
+        return nullptr;
+    }
+    return jvm->env;
 }
 
 void JavaVirtualMachineRegistry::detachCurrentThread() {
@@ -72,30 +80,31 @@ void JavaVirtualMachineRegistry::detachCurrentThread() {
     }
 
     // We make sure not do detach the main thread.
-    if (jvm->second == globalJvm) {
+    if (jvm->second == mainJvm) {
         mutex.unlock();
         throw JniException("Cannot detach the main thread");
     }
 
     // Otherwise, the thread is detached and its JavaVirtualMachine is deleted.
-    globalJvm->jvm->DetachCurrentThread();
-    //delete jvm->second;
+    mainJvm->jvm->DetachCurrentThread();
+    delete jvm->second;
     jvmByThread.erase(this_thread::get_id());
 
     mutex.unlock();
 }
 
 void JavaVirtualMachineRegistry::clear() {
-    if (globalJvm != nullptr) {
+    if (mainJvm != nullptr) {
         mutex.lock();
 
         // Each JVM must be destroyed.
+        delete mainJvm;
         for (auto &jvm : jvmByThread) {
             delete jvm.second;
         }
 
         // We restore all fields to their initial state.
-        globalJvm = nullptr;
+        mainJvm = nullptr;
         jvmByThread.clear();
 
         mutex.unlock();

@@ -18,13 +18,15 @@
  * If not, see {@link http://www.gnu.org/licenses}.
  */
 
-#include <exception>
 #include <getopt.h>
+
+#include <exception>
 #include <string>
 
 #include <jni.h>
 #include <iostream>
 
+#include "easyjni/JavaArray.h"
 #include "easyjni/JavaClass.h"
 #include "easyjni/JavaMethod.h"
 #include "easyjni/JavaVirtualMachine.h"

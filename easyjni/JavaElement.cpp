@@ -34,5 +34,5 @@ const string &JavaElement::getName() const {
 }
 
 JNIEnv *JavaElement::getEnvironment() {
-    return JavaVirtualMachineRegistry::get()->env;
+    return JavaVirtualMachineRegistry::getEnvironment();
 }

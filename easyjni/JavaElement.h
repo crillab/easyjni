@@ -1,6 +1,6 @@
 /**
  * EasyJNI - Invoking Java code from C++ made easy.
- * Copyright (c) 2022 - Univ Artois & CNRS.
+ * Copyright (c) 2022 - Univ Artois & CNRS & Exakis Nelite.
  * All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -40,11 +40,6 @@ namespace easyjni {
     protected:
 
         /**
-         * The Java environment in which this element has been declared.
-         */
-        //JNIEnv *environment;
-
-        /**
          * The name of this element.
          */
         std::string name;
@@ -57,8 +52,10 @@ namespace easyjni {
          * @param environment The Java environment in which the element has been declared.
          * @param name The name of the element.
          */
-        JavaElement(std::string name);
-        JNIEnv* getEnvironment();
+        explicit JavaElement(std::string name);
+
+        static JNIEnv* getEnvironment();
+
     public:
 
         /**

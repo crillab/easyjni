@@ -48,6 +48,14 @@ namespace easyjni {
         /**
          * Creates a new JniException.
          *
+         * @param errorCode The error code returned by JNI when the error occurred.
+         * @param when The message describing when the problem occurred.
+         */
+        explicit JniException(int errorCode, const std::string &when = "");
+
+        /**
+         * Creates a new JniException.
+         *
          * @param message The error message describing the problem that occurred.
          */
         explicit JniException(std::string message);

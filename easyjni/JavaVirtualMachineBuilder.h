@@ -1,6 +1,6 @@
 /**
  * EasyJNI - Invoking Java code from C++ made easy.
- * Copyright (c) 2022 - Univ Artois & CNRS.
+ * Copyright (c) 2022 - Univ Artois & CNRS & Exakis Nelite.
  * All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ namespace easyjni {
 
     /**
      * The JavaVirtualMachineBuilder provides a user-friendly interface for
-     * building instances of Java Virtual Machine with the needed options.
+     * building instances of Java Virtual Machines with the needed options.
      *
      * @author Romain Wallon
      *

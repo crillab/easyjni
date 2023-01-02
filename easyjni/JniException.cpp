@@ -18,10 +18,51 @@
  * If not, see {@link http://www.gnu.org/licenses}.
  */
 
+#include <jni.h>
+
 #include "JniException.h"
 
 using namespace easyjni;
 using namespace std;
+
+/**
+ * Looks up the error message string corresponding to an error number.
+ *
+ * @param errorNumber The error number produced by JNI.
+ *
+ * @return The message describing the error.
+ */
+static string jerror(int errorNumber) {
+    switch (errorNumber) {
+        case JNI_OK:
+            return "success";
+
+        case JNI_EDETACHED:
+            return "thread detached from the VM";
+
+        case JNI_EVERSION:
+            return "JNI version error";
+
+        case JNI_ENOMEM:
+            return "not enough memory";
+
+        case JNI_EEXIST:
+            return "VM already created";
+
+        case JNI_EINVAL:
+            return "invalid arguments";
+
+        default:
+            return "unknown error";
+    }
+}
+
+JniException::JniException(int errorCode, const string &when) {
+    if (!when.empty()) {
+        message = when + ": ";
+    }
+    message += jerror(errorCode);
+}
 
 JniException::JniException(string message) :
         message(std::move(message)) {

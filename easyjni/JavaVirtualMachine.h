@@ -391,10 +391,6 @@ namespace easyjni {
          */
         friend class JavaVirtualMachineRegistry;
 
-        friend class JavaElement;
-
-        friend class JavaVirtualMachine;
-
     };
 
 }

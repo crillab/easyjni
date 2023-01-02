@@ -1,6 +1,6 @@
 /**
  * EasyJNI - Invoking Java code from C++ made easy.
- * Copyright (c) 2022 - Univ Artois & CNRS.
+ * Copyright (c) 2022 - Univ Artois & CNRS & Exakis Nelite.
  * All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -49,7 +49,7 @@ JavaVirtualMachineBuilder &JavaVirtualMachineBuilder::setVersion(int version) {
 JavaVirtualMachineBuilder &JavaVirtualMachineBuilder::addToClasspath(const string &path) {
     filesystem::path filepath(path);
     filepath = filepath.make_preferred();
-    classpath.push_back(filepath.string());
+    classpath.emplace_back(filepath.string());
     return *this;
 }
 
@@ -59,8 +59,7 @@ JavaVirtualMachineBuilder &JavaVirtualMachineBuilder::addOption(const string &na
 }
 
 JavaVirtualMachineBuilder &JavaVirtualMachineBuilder::addOption(const string &name, const string &value) {
-    options.emplace_back(name + "=" + value);
-    return *this;
+    return addOption(name + "=" + value);
 }
 
 JavaVirtualMachine *JavaVirtualMachineBuilder::buildJavaVirtualMachine() {
@@ -92,7 +91,7 @@ JavaVirtualMachine *JavaVirtualMachineBuilder::buildJavaVirtualMachine() {
     }
 
     // The JVM could not be created.
-    throw JniException("Could not create a Java Virtual Machine");
+    throw JniException(result, "Could not create a Java Virtual Machine");
 }
 
 string JavaVirtualMachineBuilder::buildClasspath() {

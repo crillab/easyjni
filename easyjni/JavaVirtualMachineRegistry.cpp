@@ -30,11 +30,14 @@ mutex JavaVirtualMachineRegistry::mutex;
 
 void JavaVirtualMachineRegistry::set(JavaVirtualMachine *jvm) {
     mutex.lock();
+
     if (mainJvm != nullptr) {
+        // We cannot overwrite the existing main JVM.
         mutex.unlock();
         throw JniException("A Java Virtual Machine already exists");
     }
 
+    // The JVM is saved, and attached to the current thread.
     mainJvm = jvm;
     jvmByThread[this_thread::get_id()] = jvm;
 
@@ -43,6 +46,12 @@ void JavaVirtualMachineRegistry::set(JavaVirtualMachine *jvm) {
 
 JavaVirtualMachine *JavaVirtualMachineRegistry::get() {
     mutex.lock();
+
+    // If there is no JVM at all, there is nothing to return.
+    if (mainJvm == nullptr) {
+        mutex.unlock();
+        return nullptr;
+    }
 
     // If the current thread is already attached to a JVM, this JVM is returned.
     auto jvm = jvmByThread.find(this_thread::get_id());
@@ -94,9 +103,9 @@ void JavaVirtualMachineRegistry::detachCurrentThread() {
 }
 
 void JavaVirtualMachineRegistry::clear() {
-    if (mainJvm != nullptr) {
-        mutex.lock();
+    mutex.lock();
 
+    if (mainJvm != nullptr) {
         // Each JVM must be destroyed.
         delete mainJvm;
         for (auto &jvm : jvmByThread) {
@@ -106,7 +115,7 @@ void JavaVirtualMachineRegistry::clear() {
         // We restore all fields to their initial state.
         mainJvm = nullptr;
         jvmByThread.clear();
-
-        mutex.unlock();
     }
+
+    mutex.unlock();
 }

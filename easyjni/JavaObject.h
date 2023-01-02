@@ -65,7 +65,7 @@ namespace easyjni {
          * @param environment The Java environment in which the object has been created.
          * @param nativeObject Tha native pointer to the object in the Java Virtual Machine.
          */
-        JavaObject(jobject nativeObject);
+        explicit JavaObject(jobject nativeObject);
 
     public:
 

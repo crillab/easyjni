@@ -4,13 +4,14 @@ set(CMAKE_CXX_STANDARD 17)
 
 # Declaring the project.
 project(easyjni)
+set(LIBRARY_NAME easyjni)
 
 # Configuring the use of JNI.
 find_package(JNI REQUIRED)
 include_directories(${JNI_INCLUDE_DIRS})
 
 # Adding the library to the build targets.
-add_library(libeasyjni
+add_library(${LIBRARY_NAME}
 
         easyjni/JavaArray.h easyjni/JavaArray.cpp
         easyjni/JavaClass.h easyjni/JavaClass.cpp
@@ -25,10 +26,11 @@ add_library(libeasyjni
         easyjni/JavaVirtualMachineRegistry.h easyjni/JavaVirtualMachineRegistry.cpp
 
         easyjni/JniException.h easyjni/JniException.cpp)
-target_link_libraries(libeasyjni ${JNI_LIBRARIES})
+target_link_libraries(${LIBRARY_NAME} ${JNI_LIBRARIES})
 
+# Adding the executable (for demonstration purposes) to the build targets.
+# It is only built on UNIX systems because of the use of getopt().
 if (UNIX)
-    # Adding the executable (for demonstration purposes) to the build targets.
-    add_executable(easyjni-demo main.cpp)
-    target_link_libraries(easyjni-demo libeasyjni)
+    add_executable(${LIBRARY_NAME}-demo main.cpp)
+    target_link_libraries(${LIBRARY_NAME}-demo ${LIBRARY_NAME})
 endif (UNIX)

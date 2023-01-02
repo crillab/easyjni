@@ -1,6 +1,6 @@
 /**
  * EasyJNI - Invoking Java code from C++ made easy.
- * Copyright (c) 2022 - Univ Artois & CNRS.
+ * Copyright (c) 2022 - Univ Artois & CNRS & Exakis Nelite.
  * All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -29,10 +29,10 @@ JavaElement::JavaElement(string name) :
     // Nothing to do: everything is already initialized.
 }
 
-const string &JavaElement::getName() const {
-    return name;
-}
-
 JNIEnv *JavaElement::getEnvironment() {
     return JavaVirtualMachineRegistry::getEnvironment();
+}
+
+const string &JavaElement::getName() const {
+    return name;
 }

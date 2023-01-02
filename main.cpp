@@ -1,6 +1,6 @@
 /**
  * EasyJNI - Invoking Java code from C++ made easy.
- * Copyright (c) 2022 - Univ Artois & CNRS.
+ * Copyright (c) 2022 - Univ Artois & CNRS & Exakis Nelite.
  * All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -24,7 +24,6 @@
 #include <string>
 
 #include <jni.h>
-#include <iostream>
 
 #include "easyjni/JavaArray.h"
 #include "easyjni/JavaClass.h"
@@ -81,7 +80,7 @@ int buildJvmFromArguments(int argc, char *argv[], string &mainClass) {
 /**
  * Builds the array of (Java) strings to pass to the Java program.
  *
- * @param first The index of the first arguments for the Java program.
+ * @param first The index of the first argument for the Java program.
  * @param argc The number of arguments given to the program.
  * @param argv The command line arguments.
  *
@@ -104,7 +103,7 @@ JavaArray<JavaObject> buildJavaArguments(int first, int argc, char *argv[]) {
  */
 void javaMain(const string &mainClass, JavaArray<JavaObject> args) {
     auto cls = JavaVirtualMachineRegistry::get()->loadClass(mainClass);
-    auto mtd = cls.getStaticObjectMethod("main", METHOD(VOID, ARRAY(CLASS(java/lang/String))));
+    auto mtd = cls.getStaticMethod("main", METHOD(VOID, ARRAY(CLASS(java/lang/String))));
     mtd.invokeStatic(cls, *args);
 }
 

@@ -1,6 +1,6 @@
 /**
  * EasyJNI - Invoking Java code from C++ made easy.
- * Copyright (c) 2022 - Univ Artois & CNRS.
+ * Copyright (c) 2022 - Univ Artois & CNRS & Exakis Nelite.
  * All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -22,6 +22,7 @@
 #define EASYJNI_JAVAARRAY_H
 
 #include <jni.h>
+
 #include "JavaVirtualMachineRegistry.h"
 
 namespace easyjni {
@@ -52,7 +53,6 @@ namespace easyjni {
 
     private:
 
-
         /**
          * The native pointer to the array in the Java Virtual Machine.
          */
@@ -63,10 +63,9 @@ namespace easyjni {
         /**
          * Creates a new JavaArray.
          *
-         * @param environment The Java environment in which the array has been created.
          * @param array The native pointer to the array in the Java Virtual Machine.
          */
-        JavaArray(jarray array) :
+        explicit JavaArray(jarray array) :
                 array(array) {
             // Nothing to do: everything is already initialized.
         }
@@ -74,8 +73,7 @@ namespace easyjni {
         /**
          * Creates a new JavaArray.
          *
-         * @param environment The Java environment in which the array has been created.
-         * @param array The native pointer to the array in the Java Virtual Machine, as an object.
+         * @param object The native pointer to the array in the Java Virtual Machine, as an object.
          *
          * @return The created JavaArray.
          */
@@ -108,7 +106,7 @@ namespace easyjni {
          * @return The length of this array.
          */
         int length() {
-            return JavaVirtualMachineRegistry::get()->env->GetArrayLength(array);
+            return JavaVirtualMachineRegistry::getEnvironment()->GetArrayLength(array);
         }
 
         /**

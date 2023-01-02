@@ -5,5 +5,5 @@
 build
 cmake-build-debug
 
-# Miscellaneous
+# Miscellaneous.
 .DS_Store

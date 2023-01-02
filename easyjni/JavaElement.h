@@ -49,12 +49,16 @@ namespace easyjni {
         /**
          * Creates a new JavaElement.
          *
-         * @param environment The Java environment in which the element has been declared.
          * @param name The name of the element.
          */
         explicit JavaElement(std::string name);
 
-        static JNIEnv* getEnvironment();
+        /**
+         * Gives the Java environment in which this element is defined.
+         *
+         * @return The Java environment.
+         */
+        static JNIEnv *getEnvironment();
 
     public:
 

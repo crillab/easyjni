@@ -1,6 +1,6 @@
 /**
  * EasyJNI - Invoking Java code from C++ made easy.
- * Copyright (c) 2022 - Univ Artois & CNRS.
+ * Copyright (c) 2022 - Univ Artois & CNRS & Exakis Nelite.
  * All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -51,11 +51,7 @@ pair<int, int> JavaVirtualMachine::getVersion() {
 JavaClass JavaVirtualMachine::loadClass(const string &name) {
     jclass nativeClass = env->FindClass(name.c_str());
     if (nativeClass == nullptr) {
-        if (env->ExceptionCheck()) {
-            JavaObject except(env->ExceptionOccurred());
-            env->ExceptionClear();
-            throw JniException(except.toString());
-        }
+        checkException();
         throw JniException("Could not load class " + name);
     }
     return JavaClass(name, nativeClass);
@@ -208,4 +204,12 @@ JavaArray<jdouble> JavaVirtualMachine::createDoubleArray(int size) {
 JavaArray<JavaObject> JavaVirtualMachine::createObjectArray(int size, const JavaClass &clazz) {
     auto array = env->NewObjectArray(size, clazz.nativeClass, nullptr);
     return JavaArray<JavaObject>( array);
+}
+
+void JavaVirtualMachine::checkException() {
+    if (env->ExceptionCheck()) {
+        JavaObject except(env->ExceptionOccurred());
+        env->ExceptionClear();
+        throw JniException(except.toString());
+    }
 }

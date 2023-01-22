@@ -60,6 +60,12 @@ namespace easyjni {
          */
         static JNIEnv *getEnvironment();
 
+        /**
+         * Checks whether an exception occurred in the Java Virtual Machine,
+         * and throws it when this is the case.
+         */
+        static void checkException();
+
     public:
 
         /**

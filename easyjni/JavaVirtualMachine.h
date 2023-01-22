@@ -1,6 +1,6 @@
 /**
  * EasyJNI - Invoking Java code from C++ made easy.
- * Copyright (c) 2022 - Univ Artois & CNRS.
+ * Copyright (c) 2022 - Univ Artois & CNRS & Exakis Nelite.
  * All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -378,6 +378,12 @@ namespace easyjni {
          * @return The created array.
          */
         easyjni::JavaArray<easyjni::JavaObject> createObjectArray(int size, const easyjni::JavaClass &clazz);
+
+        /**
+         * Checks whether an exception occurred in this Java Virtual Machine,
+         * and throws it when this is the case.
+         */
+        void checkException();
 
         /**
          * The JavaVirtualMachineBuilder is a friend class, which allows

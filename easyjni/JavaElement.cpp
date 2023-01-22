@@ -19,7 +19,9 @@
  */
 
 #include "JavaElement.h"
+#include "JavaObject.h"
 #include "JavaVirtualMachineRegistry.h"
+#include "JniException.h"
 
 using namespace easyjni;
 using namespace std;
@@ -31,6 +33,10 @@ JavaElement::JavaElement(string name) :
 
 JNIEnv *JavaElement::getEnvironment() {
     return JavaVirtualMachineRegistry::getEnvironment();
+}
+
+void JavaElement::checkException() {
+    return JavaVirtualMachineRegistry::get()->checkException();
 }
 
 const string &JavaElement::getName() const {

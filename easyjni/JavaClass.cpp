@@ -1,6 +1,6 @@
 /**
  * EasyJNI - Invoking Java code from C++ made easy.
- * Copyright (c) 2022 - Univ Artois & CNRS.
+ * Copyright (c) 2022 - Univ Artois & CNRS & Exakis Nelite.
  * All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -30,6 +30,10 @@ JavaClass::JavaClass( string name, jclass nativeClass) :
         JavaElement( std::move(name)),
         nativeClass(nativeClass) {
     // Nothing to do: everything is already initialized.
+}
+
+jclass JavaClass::operator*() {
+    return nativeClass;
 }
 
 JavaObject JavaClass::asObject() {
@@ -157,7 +161,7 @@ JavaField<JavaObject> JavaClass::getStaticObjectField(const string &name, const 
 
 JavaMethod<JavaObject> JavaClass::getConstructor(const string &signature) {
     jmethodID constructor = getMethodID("<init>", signature);
-    return {
+    return JavaMethod<JavaObject>(
 
         "<init>",
         constructor,
@@ -168,7 +172,7 @@ JavaMethod<JavaObject> JavaClass::getConstructor(const string &signature) {
             jobject res = env->NewObjectV(cls, mtd, args);
             return JavaObject(res);
         }
-    };
+    );
 }
 
 JavaObject JavaClass::newInstance() {
@@ -177,12 +181,7 @@ JavaObject JavaClass::newInstance() {
     jobject nativeObject = getEnvironment()->NewObject(nativeClass, constructor);
 
     // Checking if an exception occurred.
-    if (getEnvironment()->ExceptionCheck()) {
-        JavaObject except(getEnvironment()->ExceptionOccurred());
-        getEnvironment()->ExceptionClear();
-        throw JniException(except.toString());
-    }
-
+    checkException();
     return JavaObject(nativeObject);
 }
 
@@ -289,11 +288,7 @@ JavaMethod<JavaObject> JavaClass::getStaticObjectMethod(const string &name, cons
 jfieldID JavaClass::getFieldID(const string &name, const string &signature) {
     jfieldID field = getEnvironment()->GetFieldID(nativeClass, name.c_str(), signature.c_str());
     if (field == nullptr) {
-        if (getEnvironment()->ExceptionCheck()) {
-            JavaObject except(getEnvironment()->ExceptionOccurred());
-            getEnvironment()->ExceptionClear();
-            throw JniException(except.toString());
-        }
+        checkException();
         throw JniException("Could not find field " + name + " for class " + getName());
     }
     return field;
@@ -302,11 +297,7 @@ jfieldID JavaClass::getFieldID(const string &name, const string &signature) {
 jfieldID JavaClass::getStaticFieldID(const string &name, const string &signature) {
     jfieldID field = getEnvironment()->GetStaticFieldID(nativeClass, name.c_str(), signature.c_str());
     if (field == nullptr) {
-        if (getEnvironment()->ExceptionCheck()) {
-            JavaObject except(getEnvironment()->ExceptionOccurred());
-            getEnvironment()->ExceptionClear();
-            throw JniException(except.toString());
-        }
+        checkException();
         throw JniException("Could not find static field " + name + " for class " + getName());
     }
     return field;
@@ -315,11 +306,7 @@ jfieldID JavaClass::getStaticFieldID(const string &name, const string &signature
 jmethodID JavaClass::getMethodID(const string &name, const string &signature) {
     jmethodID method = getEnvironment()->GetMethodID(nativeClass, name.c_str(), signature.c_str());
     if (method == nullptr) {
-        if (getEnvironment()->ExceptionCheck()) {
-            JavaObject except(getEnvironment()->ExceptionOccurred());
-            getEnvironment()->ExceptionClear();
-            throw JniException(except.toString());
-        }
+        checkException();
         throw JniException("Could not find method " + name + " for class " + getName());
     }
     return method;
@@ -328,11 +315,7 @@ jmethodID JavaClass::getMethodID(const string &name, const string &signature) {
 jmethodID JavaClass::getStaticMethodID(const string &name, const string &signature) {
     jmethodID method = getEnvironment()->GetStaticMethodID(nativeClass, name.c_str(), signature.c_str());
     if (method == nullptr) {
-        if (getEnvironment()->ExceptionCheck()) {
-            JavaObject except(getEnvironment()->ExceptionOccurred());
-            getEnvironment()->ExceptionClear();
-            throw JniException(except.toString());
-        }
+        checkException();
         throw JniException("Could not find static method " + name + " for class " + getName());
     }
     return method;

@@ -1,6 +1,6 @@
 /**
  * EasyJNI - Invoking Java code from C++ made easy.
- * Copyright (c) 2022 - Univ Artois & CNRS.
+ * Copyright (c) 2022 - Univ Artois & CNRS & Exakis Nelite.
  * All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -55,12 +55,12 @@ namespace easyjni {
         jmethodID nativeMethod;
 
         /**
-         * The function to use to invoke this method on a particular object.
+         * The function to use to invoke this (instance) method on a particular object.
          */
         std::function<T(JNIEnv *, jobject, jmethodID, va_list)> call;
 
         /**
-         * The function to use to statically invoke this method on the class.
+         * The function to use to invoke this (static) method on its class.
          */
         std::function<T(JNIEnv *, jclass, jmethodID, va_list)> staticCall;
 
@@ -71,10 +71,10 @@ namespace easyjni {
          *
          * @param name The name of the method.
          * @param nativeMethod The native pointer to the method in the Java Virtual Machine.
-         * @param call The function to use to invoke the method on a particular object.
-         * @param staticCall The function to use to statically invoke the method on the class.
+         * @param call The function to use to invoke this (instance) method on a particular object.
+         * @param staticCall The function to use to invoke this (static) method on its class.
          */
-        JavaMethod(std::string name, jmethodID nativeMethod,
+        explicit JavaMethod(std::string name, jmethodID nativeMethod,
                    std::function<T(JNIEnv *, jobject, jmethodID, va_list)> call,
                    std::function<T(JNIEnv *, jclass, jmethodID, va_list)> staticCall) :
                 JavaElement(std::move(name)),
@@ -107,19 +107,11 @@ namespace easyjni {
          * @throws JniException If an error occurred while invoking the method.
          */
         T invoke(easyjni::JavaObject object, ...) {
-            // Invoking the method.
             va_list args;
             va_start(args, object);
-            T result = call(getEnvironment(), object.nativeObject, nativeMethod, args);
+            T result = call(getEnvironment(), *object, nativeMethod, args);
             va_end(args);
-
-            // Checking if an exception occurred.
-            if (getEnvironment()->ExceptionCheck()) {
-                JavaObject except(getEnvironment()->ExceptionOccurred());
-                getEnvironment()->ExceptionClear();
-                throw JniException(except.toString());
-            }
-
+            checkException();
             return result;
         }
 
@@ -134,18 +126,11 @@ namespace easyjni {
          * @throws JniException If an error occurred while invoking the method.
          */
         T invokeStatic(easyjni::JavaClass clazz, ...) {
-            // Invoking the method.
             va_list args;
             va_start(args, clazz);
-            T result = staticCall(getEnvironment(), clazz.nativeClass, nativeMethod, args);
+            T result = staticCall(getEnvironment(), *clazz, nativeMethod, args);
             va_end(args);
-
-            // Checking if an exception occurred.
-            if (getEnvironment()->ExceptionCheck()) {
-                JavaObject except(getEnvironment()->ExceptionOccurred());
-                getEnvironment()->ExceptionClear();
-                throw JniException(except.toString());
-            }
+            checkException();
             return result;
         }
 

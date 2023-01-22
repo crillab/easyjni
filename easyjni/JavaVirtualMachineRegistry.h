@@ -54,7 +54,7 @@ namespace easyjni {
         /**
          * The mutex used to avoid concurrent accesses to the map of Java Virtual Machines.
          */
-         static std::mutex mutex;
+        static std::mutex mutex;
 
     public:
 

@@ -81,7 +81,7 @@ namespace easyjni {
          * @return The object view of the array.
          */
         template<typename T>
-        static easyjni::JavaObject fromArray(easyjni::JavaArray<T> array) {
+        static easyjni::JavaObject fromArray(const easyjni::JavaArray<T> &array) {
             return JavaObject(*array);
         }
 

@@ -1,6 +1,6 @@
 /**
  * EasyJNI - Invoking Java code from C++ made easy.
- * Copyright (c) 2022 - Univ Artois & CNRS.
+ * Copyright (c) 2022 - Univ Artois & CNRS & Exakis Nelite.
  * All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -70,9 +70,11 @@ namespace easyjni {
          * @param name The name of the class.
          * @param nativeClass The native pointer to the class in the Java Virtual Machine.
          */
-        JavaClass(std::string name, jclass nativeClass);
+        explicit JavaClass(std::string name, jclass nativeClass);
 
     public:
+
+        jclass operator*();
 
         /**
          * Gives this class viewed as a Java object (i.e., the so-called "metaclass").
@@ -662,18 +664,6 @@ namespace easyjni {
          * retrieve the fields and methods of a Java object.
          */
         friend class JavaObject;
-
-        /**
-         * The JavaField is a friend class, which interacts with JavaClass to
-         * represent the fields of such a class.
-         */
-        template<typename T> friend class JavaField;
-
-        /**
-         * The JavaMethod is a friend class, which interacts with JavaClass to
-         * represent the methods of such a class.
-         */
-        template<typename T> friend class JavaMethod;
 
     };
 

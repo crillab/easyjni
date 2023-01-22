@@ -1,6 +1,6 @@
 /**
  * EasyJNI - Invoking Java code from C++ made easy.
- * Copyright (c) 2022 - Univ Artois & CNRS.
+ * Copyright (c) 2022 - Univ Artois & CNRS & Exakis Nelite.
  * All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -18,10 +18,9 @@
  * If not, see {@link http://www.gnu.org/licenses}.
  */
 
-
-#include "JavaObject.h"
-#include "JavaMethod.h"
 #include "JavaClass.h"
+#include "JavaMethod.h"
+#include "JavaObject.h"
 #include "JavaVirtualMachineRegistry.h"
 
 using namespace easyjni;
@@ -32,16 +31,17 @@ JavaObject::JavaObject(jobject nativeObject) :
     // Nothing to do: everything is already initialized.
 }
 
-bool JavaObject::isNull() {
-    return nativeObject == nullptr;
-}
-
 jobject JavaObject::operator*() {
     return nativeObject;
 }
 
+bool JavaObject::isNull() {
+    return nativeObject == nullptr;
+}
+
 JavaClass JavaObject::getClass() {
-    jclass cls = JavaVirtualMachineRegistry::get()->env->GetObjectClass(nativeObject);
+    jclass cls = JavaVirtualMachineRegistry::getEnvironment()->GetObjectClass(nativeObject);
+    JavaVirtualMachineRegistry::get()->checkException();
     return JavaClass("<unknown-class>", cls);
 }
 
@@ -54,16 +54,21 @@ int JavaObject::hashCode() {
 bool JavaObject::equals(JavaObject &other) {
     auto metaClass = getClass();
     auto method = metaClass.getBooleanMethod("equals", METHOD(BOOLEAN, CLASS(java/lang/Object)));
-    return method.invoke(*this);
+    return method.invoke(*this, *other);
 }
 
 string JavaObject::toString() {
+    // Invoking the toString() method on the Java object.
     auto metaClass = getClass();
     auto method = metaClass.getObjectMethod("toString", METHOD(CLASS(java/lang/String)));
     auto str = method.invoke(*this);
     auto javaString = (jstring) str.nativeObject;
-    const char *nativeString = JavaVirtualMachineRegistry::get()->env->GetStringUTFChars(javaString, nullptr);
+
+    // Copying the Java string into a C++ string.
+    const char *nativeString = JavaVirtualMachineRegistry::getEnvironment()->GetStringUTFChars(javaString, nullptr);
+    JavaVirtualMachineRegistry::get()->checkException();
     string cppString(nativeString);
-    JavaVirtualMachineRegistry::get()->env->ReleaseStringUTFChars(javaString, nativeString);
+    JavaVirtualMachineRegistry::getEnvironment()->ReleaseStringUTFChars(javaString, nativeString);
+    JavaVirtualMachineRegistry::get()->checkException();
     return cppString;
 }

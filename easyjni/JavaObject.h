@@ -1,6 +1,6 @@
 /**
  * EasyJNI - Invoking Java code from C++ made easy.
- * Copyright (c) 2022 - Univ Artois & CNRS.
+ * Copyright (c) 2022 - Univ Artois & CNRS & Exakis Nelite.
  * All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -25,10 +25,15 @@
 
 #include <jni.h>
 
-
 namespace easyjni {
+
+    /**
+     * Forward declaration of JavaArray, the class that represents an array in
+     * the Java Virtual Machine.
+     */
     template<typename T>
     class JavaArray;
+
     /**
      * Forward declaration of JavaClass, the class that represents the Java class of
      * an object from the Java Virtual Machine.
@@ -57,12 +62,9 @@ namespace easyjni {
          */
         jobject nativeObject;
 
-    private:
-
         /**
          * Creates a new JavaObject.
          *
-         * @param environment The Java environment in which the object has been created.
          * @param nativeObject Tha native pointer to the object in the Java Virtual Machine.
          */
         explicit JavaObject(jobject nativeObject);
@@ -72,15 +74,15 @@ namespace easyjni {
         /**
          * Provides an object view of an array.
          *
-         * @tparam T The type of the element in the array.
+         * @tparam T The type of the elements in the array.
          *
          * @param array The array to give an object view of.
          *
          * @return The object view of the array.
          */
         template<typename T>
-        static easyjni::JavaObject fromArray(JavaArray<T> array) {
-            return JavaObject(array.array);
+        static easyjni::JavaObject fromArray(easyjni::JavaArray<T> array) {
+            return JavaObject(*array);
         }
 
         /**
@@ -92,15 +94,8 @@ namespace easyjni {
          */
         template<typename T>
         easyjni::JavaArray<T> toArray() {
-            return JavaArray<T>::asArray(nativeObject);
+            return easyjni::JavaArray<T>::asArray(nativeObject);
         }
-
-        /**
-         * Checks whether this object is a null Java object.
-         *
-         * @return Whether this object is null.
-         */
-        bool isNull();
 
         /**
          * Gives the native pointer to the object in the Java Virtual Machine.
@@ -108,6 +103,13 @@ namespace easyjni {
          * @return The native pointer to the object in the Java Virtual Machine.
          */
         jobject operator*();
+
+        /**
+         * Checks whether this object is a null Java object.
+         *
+         * @return Whether this object is null.
+         */
+        bool isNull();
 
         /**
          * Gives the runtime class of this object.
@@ -140,22 +142,16 @@ namespace easyjni {
         std::string toString();
 
         /**
-         * The JavaVirtualMachine is a friend class, which allows to create instances of
-         * JavaObject by extracting objects from the JVM.
+         * The JavaArray is a friend class, which can create instances of JavaObject by
+         * accessing to the elements of an array.
          */
-        friend class JavaVirtualMachine;
+        template<typename T> friend class JavaArray;
 
         /**
          * The JavaClass is a friend class, which allows to build instances of JavaObject
          * by invoking methods on such objects.
          */
         friend class JavaClass;
-
-        /**
-         * The JavaArray is a friend class, which can create instances of JavaObject by
-         * accessing to the elements of an array.
-         */
-        template<typename T> friend class JavaArray;
 
         /**
          * The JavaField is a friend class, which allows to access to the fields of
@@ -168,6 +164,12 @@ namespace easyjni {
          * an object.
          */
         template<typename T> friend class JavaMethod;
+
+        /**
+         * The JavaVirtualMachine is a friend class, which allows to create instances of
+         * JavaObject by extracting objects from the JVM.
+         */
+        friend class JavaVirtualMachine;
 
     };
 

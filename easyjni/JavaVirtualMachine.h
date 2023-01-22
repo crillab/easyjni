@@ -40,7 +40,7 @@ namespace easyjni {
      */
     class JavaVirtualMachine {
 
-    public:
+    private:
 
         /**
          * The native Java Virtual Machine provided by JNI.

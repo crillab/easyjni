@@ -1,6 +1,6 @@
 /**
  * EasyJNI - Invoking Java code from C++ made easy.
- * Copyright (c) 2022 - Univ Artois & CNRS.
+ * Copyright (c) 2022 - Univ Artois & CNRS & Exakis Nelite.
  * All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -24,12 +24,9 @@ using namespace easyjni;
 using namespace std;
 
 template<>
-JavaField<jboolean> JavaField<jboolean>::newInstance(
-        std::string name, jfieldID nativeField) {
-    return {
-
-            std::move(name),
-            nativeField,
+JavaField<jboolean> JavaField<jboolean>::newInstance(string name, jfieldID nativeField) {
+    return JavaField(
+            std::move(name), nativeField,
             [](JNIEnv *env, jobject obj, jfieldID fld) {
                 return env->GetBooleanField(obj, fld);
             },
@@ -41,17 +38,13 @@ JavaField<jboolean> JavaField<jboolean>::newInstance(
             },
             [](JNIEnv *env, jclass cls, jfieldID fld, jboolean val) {
                 env->SetStaticBooleanField(cls, fld, val);
-            }
-    };
+            });
 }
 
 template<>
-JavaField<jbyte> JavaField<jbyte>::newInstance(
-        std::string name, jfieldID nativeField) {
-    return {
-            
-            std::move(name),
-            nativeField,
+JavaField<jbyte> JavaField<jbyte>::newInstance(string name, jfieldID nativeField) {
+    return JavaField(
+            std::move(name), nativeField,
             [](JNIEnv *env, jobject obj, jfieldID fld) {
                 return env->GetByteField(obj, fld);
             },
@@ -63,17 +56,13 @@ JavaField<jbyte> JavaField<jbyte>::newInstance(
             },
             [](JNIEnv *env, jclass cls, jfieldID fld, jbyte val) {
                 env->SetStaticByteField(cls, fld, val);
-            }
-    };
+            });
 }
 
 template<>
-JavaField<jchar> JavaField<jchar>::newInstance(
-        std::string name, jfieldID nativeField) {
-    return {
-            
-            std::move(name),
-            nativeField,
+JavaField<jchar> JavaField<jchar>::newInstance(string name, jfieldID nativeField) {
+    return JavaField(
+            std::move(name), nativeField,
             [](JNIEnv *env, jobject obj, jfieldID fld) {
                 return env->GetCharField(obj, fld);
             },
@@ -85,17 +74,13 @@ JavaField<jchar> JavaField<jchar>::newInstance(
             },
             [](JNIEnv *env, jclass cls, jfieldID fld, jchar val) {
                 env->SetStaticCharField(cls, fld, val);
-            }
-    };
+            });
 }
 
 template<>
-JavaField<jshort> JavaField<jshort>::newInstance(
-        std::string name, jfieldID nativeField) {
-    return {
-            
-            std::move(name),
-            nativeField,
+JavaField<jshort> JavaField<jshort>::newInstance(string name, jfieldID nativeField) {
+    return JavaField(
+            std::move(name), nativeField,
             [](JNIEnv *env, jobject obj, jfieldID fld) {
                 return env->GetShortField(obj, fld);
             },
@@ -107,17 +92,13 @@ JavaField<jshort> JavaField<jshort>::newInstance(
             },
             [](JNIEnv *env, jclass cls, jfieldID fld, jshort val) {
                 env->SetStaticShortField(cls, fld, val);
-            }
-    };
+            });
 }
 
 template<>
-JavaField<jint> JavaField<jint>::newInstance(
-        std::string name, jfieldID nativeField) {
-    return {
-            
-            std::move(name),
-            nativeField,
+JavaField<jint> JavaField<jint>::newInstance(string name, jfieldID nativeField) {
+    return JavaField(
+            std::move(name), nativeField,
             [](JNIEnv *env, jobject obj, jfieldID fld) {
                 return env->GetIntField(obj, fld);
             },
@@ -129,17 +110,13 @@ JavaField<jint> JavaField<jint>::newInstance(
             },
             [](JNIEnv *env, jclass cls, jfieldID fld, jint val) {
                 env->SetStaticIntField(cls, fld, val);
-            }
-    };
+            });
 }
 
 template<>
-JavaField<jlong> JavaField<jlong>::newInstance(
-        std::string name, jfieldID nativeField) {
-    return {
-            
-            std::move(name),
-            nativeField,
+JavaField<jlong> JavaField<jlong>::newInstance(string name, jfieldID nativeField) {
+    return JavaField(
+            std::move(name), nativeField,
             [](JNIEnv *env, jobject obj, jfieldID fld) {
                 return env->GetLongField(obj, fld);
             },
@@ -151,17 +128,13 @@ JavaField<jlong> JavaField<jlong>::newInstance(
             },
             [](JNIEnv *env, jclass cls, jfieldID fld, jlong val) {
                 env->SetStaticLongField(cls, fld, val);
-            }
-    };
+            });
 }
 
 template<>
-JavaField<jfloat> JavaField<jfloat>::newInstance(
-        std::string name, jfieldID nativeField) {
-    return {
-            
-            std::move(name),
-            nativeField,
+JavaField<jfloat> JavaField<jfloat>::newInstance(string name, jfieldID nativeField) {
+    return JavaField(
+            std::move(name), nativeField,
             [](JNIEnv *env, jobject obj, jfieldID fld) {
                 return env->GetFloatField(obj, fld);
             },
@@ -173,17 +146,13 @@ JavaField<jfloat> JavaField<jfloat>::newInstance(
             },
             [](JNIEnv *env, jclass cls, jfieldID fld, jfloat val) {
                 env->SetStaticFloatField(cls, fld, val);
-            }
-    };
+            });
 }
 
 template<>
-JavaField<jdouble> JavaField<jdouble>::newInstance(
-        std::string name, jfieldID nativeField) {
-    return {
-            
-            std::move(name),
-            nativeField,
+JavaField<jdouble> JavaField<jdouble>::newInstance(string name, jfieldID nativeField) {
+    return JavaField(
+            std::move(name), nativeField,
             [](JNIEnv *env, jobject obj, jfieldID fld) {
                 return env->GetDoubleField(obj, fld);
             },
@@ -195,30 +164,25 @@ JavaField<jdouble> JavaField<jdouble>::newInstance(
             },
             [](JNIEnv *env, jclass cls, jfieldID fld, jdouble val) {
                 env->SetStaticDoubleField(cls, fld, val);
-            }
-    };
+            });
 }
 
 template<>
-JavaField<JavaObject> JavaField<JavaObject>::newInstance(
-        std::string name, jfieldID nativeField) {
-    return {
-            
-            std::move(name),
-            nativeField,
+JavaField<JavaObject> JavaField<JavaObject>::newInstance(string name, jfieldID nativeField) {
+    return JavaField(
+            std::move(name), nativeField,
             [](JNIEnv *env, jobject obj, jfieldID fld) {
                 jobject res = env->GetObjectField(obj, fld);
                 return JavaObject(res);
             },
             [](JNIEnv *env, jobject obj, jfieldID fld, JavaObject val) {
-                env->SetObjectField(obj, fld, val.nativeObject);
+                env->SetObjectField(obj, fld, *val);
             },
             [](JNIEnv *env, jclass cls, jfieldID fld) {
                 jobject res = env->GetStaticObjectField(cls, fld);
                 return JavaObject(res);
             },
             [](JNIEnv *env, jclass cls, jfieldID fld, JavaObject val) {
-                env->SetStaticObjectField(cls, fld, val.nativeObject);
-            }
-    };
+                env->SetStaticObjectField(cls, fld, *val);
+            });
 }

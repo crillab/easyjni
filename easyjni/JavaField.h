@@ -1,6 +1,6 @@
 /**
  * EasyJNI - Invoking Java code from C++ made easy.
- * Copyright (c) 2022 - Univ Artois & CNRS.
+ * Copyright (c) 2022 - Univ Artois & CNRS & Exakis Nelite.
  * All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -55,22 +55,22 @@ namespace easyjni {
         jfieldID nativeField;
 
         /**
-         * The function to use to get the value of this field for a particular object.
+         * The function to use to get the value of this (instance) field for a particular object.
          */
         std::function<T(JNIEnv *, jobject, jfieldID)> getter;
 
         /**
-         * The function to use to set the value of this field for a particular object.
+         * The function to use to set the value of this (instance) field for a particular object.
          */
         std::function<void(JNIEnv *, jobject, jfieldID, T)> setter;
 
         /**
-         * The function to use to get the static value of this field in the class.
+         * The function to use to get the value of this (static) field in the class.
          */
         std::function<T(JNIEnv *, jclass, jfieldID)> staticGetter;
 
         /**
-         * The function to use to set the static value of this field in the class.
+         * The function to use to set the value of this (static) field in the class.
          */
         std::function<void(JNIEnv *, jclass, jfieldID, T)> staticSetter;
 
@@ -79,15 +79,14 @@ namespace easyjni {
         /**
          * Creates a new JavaField.
          *
-         * @param environment The Java environment in which the field has been declared.
          * @param name The name of the field.
          * @param nativeField The native pointer to the field in the Java Virtual Machine.
-         * @param getter The function to use to get the value of the field for a particular object.
-         * @param setter The function to use to set the value of the field for a particular object.
-         * @param staticGetter The function to use to get the static value of the field in the class.
-         * @param staticSetter The function to use to set the static value of the field in the class.
+         * @param getter The function to use to get the value of the (instance) field for a particular object.
+         * @param setter The function to use to set the value of the (instance) field for a particular object.
+         * @param staticGetter The function to use to get the value of the (static) field in the class.
+         * @param staticSetter The function to use to set the value of the (static) field in the class.
          */
-        JavaField( std::string name, jfieldID nativeField,
+        explicit JavaField(std::string name, jfieldID nativeField,
                   std::function<T(JNIEnv *, jobject, jfieldID)> getter,
                   std::function<void(JNIEnv *, jobject, jfieldID, T)> setter,
                   std::function<T(JNIEnv *, jclass, jfieldID)> staticGetter,
@@ -104,7 +103,6 @@ namespace easyjni {
         /**
          * Creates a new JavaField.
          *
-         * @param environment The Java environment in which the field has been declared.
          * @param name The name of the field.
          * @param nativeField The native pointer to the field in the Java Virtual Machine.
          *
@@ -115,53 +113,59 @@ namespace easyjni {
     public:
 
         /**
-         * Gets the value of this field for the given object.
+         * Gets the value of this (instance) field for the given object.
          *
-         * @param object The object of which to get the value of this field.
+         * @param object The object for which to get the value of this field.
          *
          * @return The value of this field for the given object.
          *
          * @throws JniException If an error occurred while getting the field.
          */
         T get(easyjni::JavaObject &object) {
-            return getter(getEnvironment(), object.nativeObject, nativeField);
+            T value = getter(getEnvironment(), *object, nativeField);
+            checkException();
+            return value;
         }
 
         /**
-         * Sets the value of this field for the given object.
+         * Sets the value of this (instance) field for the given object.
          *
-         * @param object The object of which to set the value of this field.
+         * @param object The object for which to set the value of this field.
          * @param value The new value for this field.
          *
          * @throws JniException If an error occurred while setting the field.
          */
         void set(easyjni::JavaObject &object, T value) {
-            setter(getEnvironment(), object.nativeObject, nativeField, value);
+            setter(getEnvironment(), *object, nativeField, value);
+            checkException();
         }
 
         /**
-         * Gets the value of this static field for the given class.
+         * Gets the value of this (static) field for the given class.
          *
-         * @param clazz The class of which to get the value of this field.
+         * @param clazz The class for which to get the value of this field.
          *
          * @return The value of this field for the given class.
          *
          * @throws JniException If an error occurred while getting the field.
          */
         T getStatic(easyjni::JavaClass &clazz) {
-            return staticGetter(getEnvironment(), clazz.nativeClass, nativeField);
+            T value = staticGetter(getEnvironment(), *clazz, nativeField);
+            checkException();
+            return value;
         }
 
         /**
-         * Sets the value of this static field for the given class.
+         * Sets the value of this (static) field for the given class.
          *
-         * @param clazz The class of which to set the value of this field.
+         * @param clazz The class for which to set the value of this field.
          * @param value The new value for this field.
          *
          * @throws JniException If an error occurred while setting the field.
          */
         void setStatic(easyjni::JavaClass &clazz, T value) {
-            staticSetter(getEnvironment(), clazz.nativeClass, value);
+            staticSetter(getEnvironment(), *clazz, value);
+            checkException();
         }
 
         /**

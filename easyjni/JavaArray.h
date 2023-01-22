@@ -106,7 +106,9 @@ namespace easyjni {
          * @return The length of this array.
          */
         int length() {
-            return JavaVirtualMachineRegistry::getEnvironment()->GetArrayLength(array);
+            auto len = JavaVirtualMachineRegistry::getEnvironment()->GetArrayLength(array);
+            JavaVirtualMachineRegistry::get()->checkException();
+            return len;
         }
 
         /**

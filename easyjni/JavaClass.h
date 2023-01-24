@@ -46,7 +46,7 @@ namespace easyjni {
     template<typename T> class JavaMethod;
 
     /**
-     * The JavaClass represents a class that is defined in the Java code.
+     * The JavaClass represents a Java class extracted from the Java Virtual Machine.
      *
      * @author Romain Wallon
      *
@@ -66,7 +66,6 @@ namespace easyjni {
         /**
          * Creates a new JavaClass.
          *
-         * @param environment The Java environment in which the class has been declared.
          * @param name The name of the class.
          * @param nativeClass The native pointer to the class in the Java Virtual Machine.
          */
@@ -74,6 +73,11 @@ namespace easyjni {
 
     public:
 
+        /**
+         * Gives the native pointer to the class in the Java Virtual Machine.
+         *
+         * @return The native pointer to the class in the Java Virtual Machine.
+         */
         jclass operator*();
 
         /**
@@ -660,8 +664,8 @@ namespace easyjni {
         friend class JavaVirtualMachine;
 
         /**
-         * The JavaObject is a friend class, which interacts with JavaClass to
-         * retrieve the fields and methods of a Java object.
+         * The JavaObject is a friend class, which represents the instances of
+         * a JavaClass.
          */
         friend class JavaObject;
 

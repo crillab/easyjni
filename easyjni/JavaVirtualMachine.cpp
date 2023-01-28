@@ -18,12 +18,10 @@
  * If not, see {@link http://www.gnu.org/licenses}.
  */
 
+#include "JavaArray.h"
 #include "JavaMethod.h"
 #include "JavaVirtualMachine.h"
 #include "JniException.h"
-#include "JavaClass.h"
-#include "JavaObject.h"
-#include "JavaArray.h"
 
 using namespace easyjni;
 using namespace std;
@@ -48,6 +46,14 @@ pair<int, int> JavaVirtualMachine::getVersion() {
     return pair(major, minor);
 }
 
+void JavaVirtualMachine::checkException() {
+    if (env->ExceptionCheck()) {
+        JavaObject except(env->ExceptionOccurred());
+        env->ExceptionClear();
+        throw JniException(except.toString());
+    }
+}
+
 JavaClass JavaVirtualMachine::loadClass(const string &name) {
     jclass nativeClass = env->FindClass(name.c_str());
     if (nativeClass == nullptr) {
@@ -55,14 +61,6 @@ JavaClass JavaVirtualMachine::loadClass(const string &name) {
         throw JniException("Could not load class " + name);
     }
     return JavaClass(name, nativeClass);
-}
-
-JavaObject JavaVirtualMachine::toJavaString(const string &str) {
-    return toJavaString(str.c_str());
-}
-
-JavaObject JavaVirtualMachine::toJavaString(const char *str) {
-    return JavaObject(env->NewStringUTF(str));
 }
 
 JavaObject JavaVirtualMachine::wrap(jboolean b) {
@@ -161,55 +159,66 @@ jdouble JavaVirtualMachine::unwrapAsDouble(const JavaObject &d) {
     return mtd.invoke(d);
 }
 
+JavaObject JavaVirtualMachine::toJavaString(const string &str) {
+    return toJavaString(str.c_str());
+}
+
+JavaObject JavaVirtualMachine::toJavaString(const char *str) {
+    auto javaString = JavaObject(env->NewStringUTF(str));
+    checkException();
+    return javaString;
+}
+
 JavaArray<jboolean> JavaVirtualMachine::createBooleanArray(int size) {
     auto array = env->NewBooleanArray(size);
+    checkException();
     return JavaArray<jboolean>(array);
 }
 
 JavaArray<jbyte> JavaVirtualMachine::createByteArray(int size) {
     auto array = env->NewByteArray(size);
+    checkException();
     return JavaArray<jbyte>(array);
 }
 
 JavaArray<jchar> JavaVirtualMachine::createCharArray(int size) {
     auto array = env->NewCharArray(size);
-    return JavaArray<jchar>( array);
+    checkException();
+    return JavaArray<jchar>(array);
 }
 
 JavaArray<jshort> JavaVirtualMachine::createShortArray(int size) {
     auto array = env->NewShortArray(size);
-    return JavaArray<jshort>( array);
+    checkException();
+    return JavaArray<jshort>(array);
 }
 
 JavaArray<jint> JavaVirtualMachine::createIntArray(int size) {
     auto array = env->NewIntArray(size);
-    return JavaArray<jint>( array);
+    checkException();
+    return JavaArray<jint>(array);
 }
 
 JavaArray<jlong> JavaVirtualMachine::createLongArray(int size) {
     auto array = env->NewLongArray(size);
-    return JavaArray<jlong>( array);
+    checkException();
+    return JavaArray<jlong>(array);
 }
 
 JavaArray<jfloat> JavaVirtualMachine::createFloatArray(int size) {
     auto array = env->NewFloatArray(size);
-    return JavaArray<jfloat>( array);
+    checkException();
+    return JavaArray<jfloat>(array);
 }
 
 JavaArray<jdouble> JavaVirtualMachine::createDoubleArray(int size) {
     auto array = env->NewDoubleArray(size);
-    return JavaArray<jdouble>( array);
+    checkException();
+    return JavaArray<jdouble>(array);
 }
 
 JavaArray<JavaObject> JavaVirtualMachine::createObjectArray(int size, const JavaClass &clazz) {
     auto array = env->NewObjectArray(size, clazz.nativeClass, nullptr);
-    return JavaArray<JavaObject>( array);
-}
-
-void JavaVirtualMachine::checkException() {
-    if (env->ExceptionCheck()) {
-        JavaObject except(env->ExceptionOccurred());
-        env->ExceptionClear();
-        throw JniException(except.toString());
-    }
+    checkException();
+    return JavaArray<JavaObject>(array);
 }

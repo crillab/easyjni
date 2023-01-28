@@ -25,11 +25,19 @@
 
 #include <jni.h>
 
+#include "JavaClass.h"
+#include "JavaObject.h"
 
 namespace easyjni {
+
+    /**
+     * Forward declaration of JavaArray, which represents an array in the
+     * Java Virtual Machine.
+     *
+     * @tparam T The type of the elements in the array.
+     */
     template<typename T> class JavaArray;
-    class JavaObject;
-    class JavaClass;
+
     /**
      * The JavaVirtualMachine class encapsulates the instance of the Java
      * Virtual Machine to use to run Java code.
@@ -66,19 +74,19 @@ namespace easyjni {
          * @param env The native Java Environment provided by JNI.
          * @param main Whether the Java Virtual Machine is the main one.
          */
-        JavaVirtualMachine(JavaVM *jvm, JNIEnv *env, bool main = true);
+        explicit JavaVirtualMachine(JavaVM *jvm, JNIEnv *env, bool main = true);
 
     public:
 
         /**
          * Forbids the copy of an instance of Java Virtual Machine.
          */
-        JavaVirtualMachine(JavaVirtualMachine &) = delete;
+        JavaVirtualMachine(easyjni::JavaVirtualMachine &) = delete;
 
         /**
          * Forbids the copy of an instance of a Java Virtual Machine.
          */
-        JavaVirtualMachine &operator=(JavaVirtualMachine &) = delete;
+        easyjni::JavaVirtualMachine &operator=(easyjni::JavaVirtualMachine &) = delete;
 
         /**
          * Destroys this Java Virtual Machine.
@@ -94,6 +102,12 @@ namespace easyjni {
         std::pair<int, int> getVersion();
 
         /**
+         * Checks whether an exception occurred in this Java Virtual Machine,
+         * and throws it when this is the case.
+         */
+        void checkException();
+
+        /**
          * Loads a class from this Java Virtual Machine.
          *
          * @param name The name of the class to load.
@@ -103,24 +117,6 @@ namespace easyjni {
          * @throws JniException If the class cannot be loaded.
          */
         easyjni::JavaClass loadClass(const std::string &name);
-
-        /**
-         * Converts a string into a Java string.
-         *
-         * @param str The string to convert to a Java string.
-         *
-         * @return A Java representation of the string.
-         */
-        easyjni::JavaObject toJavaString(const std::string &str);
-
-        /**
-         * Converts a string into a Java string.
-         *
-         * @param str The string to convert to a Java string.
-         *
-         * @return A Java representation of the string.
-         */
-        easyjni::JavaObject toJavaString(const char *str);
 
         /**
          * Wraps a boolean value into an object.
@@ -255,7 +251,7 @@ namespace easyjni {
         jshort unwrapAsShort(const easyjni::JavaObject &s);
 
         /**
-         * Unwraps a int value from an object.
+         * Unwraps an int value from an object.
          *
          * @param i The object wrapping the value.
          *
@@ -299,11 +295,35 @@ namespace easyjni {
         jdouble unwrapAsDouble(const easyjni::JavaObject &d);
 
         /**
+         * Converts a string into a Java string.
+         *
+         * @param str The string to convert to a Java string.
+         *
+         * @return A Java representation of the string.
+         *
+         * @throws JniException If an error occurred while converting the string.
+         */
+        easyjni::JavaObject toJavaString(const std::string &str);
+
+        /**
+         * Converts a string into a Java string.
+         *
+         * @param str The string to convert to a Java string.
+         *
+         * @return A Java representation of the string.
+         *
+         * @throws JniException If an error occurred while converting the string.
+         */
+        easyjni::JavaObject toJavaString(const char *str);
+
+        /**
          * Creates an array of boolean values in the Java Virtual Machine.
          *
          * @param size The size of the array.
          *
          * @return The created array.
+         *
+         * @throws JniException If an error occurred while creating the array.
          */
         easyjni::JavaArray<jboolean> createBooleanArray(int size);
 
@@ -313,6 +333,8 @@ namespace easyjni {
          * @param size The size of the array.
          *
          * @return The created array.
+         *
+         * @throws JniException If an error occurred while creating the array.
          */
         easyjni::JavaArray<jbyte> createByteArray(int size);
 
@@ -322,6 +344,8 @@ namespace easyjni {
          * @param size The size of the array.
          *
          * @return The created array.
+         *
+         * @throws JniException If an error occurred while creating the array.
          */
         easyjni::JavaArray<jchar> createCharArray(int size);
 
@@ -331,6 +355,8 @@ namespace easyjni {
          * @param size The size of the array.
          *
          * @return The created array.
+         *
+         * @throws JniException If an error occurred while creating the array.
          */
         easyjni::JavaArray<jshort> createShortArray(int size);
 
@@ -340,6 +366,8 @@ namespace easyjni {
          * @param size The size of the array.
          *
          * @return The created array.
+         *
+         * @throws JniException If an error occurred while creating the array.
          */
         easyjni::JavaArray<jint> createIntArray(int size);
 
@@ -349,6 +377,8 @@ namespace easyjni {
          * @param size The size of the array.
          *
          * @return The created array.
+         *
+         * @throws JniException If an error occurred while creating the array.
          */
         easyjni::JavaArray<jlong> createLongArray(int size);
 
@@ -358,6 +388,8 @@ namespace easyjni {
          * @param size The size of the array.
          *
          * @return The created array.
+         *
+         * @throws JniException If an error occurred while creating the array.
          */
         easyjni::JavaArray<jfloat> createFloatArray(int size);
 
@@ -367,6 +399,8 @@ namespace easyjni {
          * @param size The size of the array.
          *
          * @return The created array.
+         *
+         * @throws JniException If an error occurred while creating the array.
          */
         easyjni::JavaArray<jdouble> createDoubleArray(int size);
 
@@ -376,14 +410,10 @@ namespace easyjni {
          * @param size The size of the array.
          *
          * @return The created array.
+         *
+         * @throws JniException If an error occurred while creating the array.
          */
         easyjni::JavaArray<easyjni::JavaObject> createObjectArray(int size, const easyjni::JavaClass &clazz);
-
-        /**
-         * Checks whether an exception occurred in this Java Virtual Machine,
-         * and throws it when this is the case.
-         */
-        void checkException();
 
         /**
          * The JavaVirtualMachineBuilder is a friend class, which allows
@@ -393,7 +423,7 @@ namespace easyjni {
 
         /**
          * The JavaVirtualMachineRegistry is a friend class, which allows
-         * to attach a thread to a JavaVirtualMachine.
+         * to attach a thread to an instance of JavaVirtualMachine.
          */
         friend class JavaVirtualMachineRegistry;
 

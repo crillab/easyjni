@@ -70,7 +70,7 @@ namespace easyjni {
         explicit JavaObject(jobject nativeObject);
 
     public:
-
+        static easyjni::JavaObject null();
         /**
          * Provides an object view of an array.
          *

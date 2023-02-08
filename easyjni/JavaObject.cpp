@@ -30,7 +30,9 @@ JavaObject::JavaObject(jobject nativeObject) :
         nativeObject(nativeObject) {
     // Nothing to do: everything is already initialized.
 }
-
+easyjni::JavaObject JavaObject::null() {
+    return easyjni::JavaObject(nullptr);
+}
 jobject JavaObject::operator*() {
     return nativeObject;
 }
@@ -72,3 +74,5 @@ string JavaObject::toString() {
     JavaVirtualMachineRegistry::get()->checkException();
     return cppString;
 }
+
+

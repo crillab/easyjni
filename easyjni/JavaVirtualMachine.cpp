@@ -60,6 +60,7 @@ JavaClass JavaVirtualMachine::loadClass(const string &name) {
         checkException();
         throw JniException("Could not load class " + name);
     }
+    nativeClass = (jclass) env->NewGlobalRef(nativeClass);
     return JavaClass(name, nativeClass);
 }
 

@@ -18,10 +18,10 @@
  * If not, see {@link http://www.gnu.org/licenses}.
  */
 
-#include "JavaElement.h"
-#include "JavaObject.h"
-#include "JavaVirtualMachineRegistry.h"
-#include "JniException.h"
+#include "crillab-easyjni/JavaElement.h"
+#include "crillab-easyjni/JavaObject.h"
+#include "crillab-easyjni/JavaVirtualMachineRegistry.h"
+#include "crillab-easyjni/JniException.h"
 
 using namespace easyjni;
 using namespace std;

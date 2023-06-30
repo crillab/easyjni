@@ -18,8 +18,8 @@
  * If not, see {@link http://www.gnu.org/licenses}.
  */
 
-#include "JavaVirtualMachineRegistry.h"
-#include "JniException.h"
+#include "crillab-easyjni/JavaVirtualMachineRegistry.h"
+#include "crillab-easyjni/JniException.h"
 
 using namespace easyjni;
 using namespace std;

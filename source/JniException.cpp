@@ -20,7 +20,7 @@
 
 #include <jni.h>
 
-#include "JniException.h"
+#include "crillab-easyjni/JniException.h"
 
 using namespace easyjni;
 using namespace std;

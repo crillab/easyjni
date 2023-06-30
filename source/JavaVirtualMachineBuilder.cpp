@@ -22,8 +22,8 @@
 #include <iterator>
 #include <sstream>
 
-#include "JavaVirtualMachineBuilder.h"
-#include "JniException.h"
+#include "crillab-easyjni/JavaVirtualMachineBuilder.h"
+#include "crillab-easyjni/JniException.h"
 
 #ifdef _WIN32
 #define CLASSPATH_SEPARATOR ";"

@@ -18,7 +18,7 @@
  * If not, see {@link http://www.gnu.org/licenses}.
  */
 
-#include "JavaMethod.h"
+#include "crillab-easyjni/JavaMethod.h"
 
 using namespace easyjni;
 using namespace std;

@@ -18,8 +18,8 @@
  * If not, see {@link http://www.gnu.org/licenses}.
  */
 
-#include "JavaArray.h"
-#include "JavaObject.h"
+#include "crillab-easyjni/JavaArray.h"
+#include "crillab-easyjni/JavaObject.h"
 
 using namespace easyjni;
 using namespace std;

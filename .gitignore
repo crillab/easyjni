@@ -1,9 +1,16 @@
+.idea/
+.vs/
+.vscode/
+cmake-build-*/
+prefix/
+**/.DS_Store
+CMakeLists.txt.user
+CMakeUserPresets.json
 # CLion configuration files.
 .idea
 
 # Build files.
 build
-cmake-build-debug
 
 # Miscellaneous.
 .DS_Store

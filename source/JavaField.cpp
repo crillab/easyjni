@@ -18,7 +18,7 @@
  * If not, see {@link http://www.gnu.org/licenses}.
  */
 
-#include "JavaField.h"
+#include "crillab-easyjni/JavaField.h"
 
 using namespace easyjni;
 using namespace std;

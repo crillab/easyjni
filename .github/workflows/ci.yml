@@ -18,6 +18,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - name: Setup Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
       - name: Configure CMake
         run: cmake -B ${{github.workspace}}/build-${{ matrix.os }} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
       - name: Build

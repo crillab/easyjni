@@ -15,7 +15,6 @@ include(cmake/variables.cmake)
 
 # Configuring the use of JNI.
 find_package(JNI REQUIRED)
-include_directories(${JNI_INCLUDE_DIRS})
 
 # ---- Declare library ----
 
@@ -52,6 +51,8 @@ target_include_directories(
     crillab-easyjni_crillab-easyjni ${warning_guard}
     PUBLIC
     "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>"
+    ${JNI_INCLUDE_DIRS}
+    
 )
 
 target_include_directories(
@@ -61,6 +62,13 @@ target_include_directories(
 )
 
 target_compile_features(crillab-easyjni_crillab-easyjni PUBLIC cxx_std_20)
+
+# Adding the executable (for demonstration purposes) to the build targets.
+# It is only built on UNIX systems because of the use of getopt().
+if (UNIX)
+    add_executable(crillab-easyjni-demo example/main.cpp)
+    target_link_libraries(crillab-easyjni-demo crillab-easyjni_crillab-easyjni)
+endif (UNIX)
 
 # ---- Install rules ----
 
@@ -80,10 +88,3 @@ elseif(NOT PROJECT_IS_TOP_LEVEL)
 endif()
 
 include(cmake/dev-mode.cmake)
-
-# Adding the executable (for demonstration purposes) to the build targets.
-# It is only built on UNIX systems because of the use of getopt().
-if (UNIX)
-    add_executable(crillab-easyjni-demo example/main.cpp)
-    target_link_libraries(crillab-easyjni-demo crillab-easyjni_crillab-easyjni)
-endif (UNIX)

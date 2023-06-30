@@ -25,12 +25,12 @@
 
 #include <jni.h>
 
-#include "easyjni/JavaArray.h"
-#include "easyjni/JavaClass.h"
-#include "easyjni/JavaMethod.h"
-#include "easyjni/JavaVirtualMachine.h"
-#include "easyjni/JavaVirtualMachineBuilder.h"
-#include "easyjni/JavaVirtualMachineRegistry.h"
+#include <crillab-easyjni/JavaArray.h>
+#include <crillab-easyjni/JavaClass.h>
+#include <crillab-easyjni/JavaMethod.h>
+#include <crillab-easyjni/JavaVirtualMachine.h>
+#include <crillab-easyjni/JavaVirtualMachineBuilder.h>
+#include <crillab-easyjni/JavaVirtualMachineRegistry.h>
 
 using namespace easyjni;
 using namespace std;
